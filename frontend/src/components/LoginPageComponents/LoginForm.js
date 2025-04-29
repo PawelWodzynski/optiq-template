@@ -1,19 +1,27 @@
 import React, { useState } from "react";
 import "./LoginForm.css";
-import axios from "axios";
+import axios from '../../utils/axios';
 import { useNavigate } from "react-router-dom";
 
 const LoginForm = () => {
   const [login, setLogin] = useState("");
   const [password, setPassword] = useState("");
+  const [error, setError] = useState("");
   const navigate = useNavigate();
 
   const handleLogin = async (e) => {
     e.preventDefault();
+    setError(""); // Resetowanie poprzedniego błędu
+
     try {
-      const response = await axios.post("http://localhost:8080/login", {
+      // Zmiana URL na relatywny - nginx przekieruje
+      const response = await axios.post("/login", {
         login,
-        password: password.split(''),
+        password, // Usuń .split('')
+      }, {
+        headers: {
+          'Content-Type': 'application/json'
+        }
       });
       
       const { token } = response.data;
@@ -21,15 +29,27 @@ const LoginForm = () => {
       navigate("/dashboard");
     } catch (error) {
       console.error("Error logging in:", error);
-      alert("Invalid username or password");
+      
+      // Bardziej szczegółowa obsługa błędów
+      if (error.response) {
+        // Błąd z odpowiedzi serwera
+        setError(error.response.data.message || "Nieprawidłowy login lub hasło");
+      } else if (error.request) {
+        // Błąd połączenia
+        setError("Brak odpowiedzi z serwera. Sprawdź połączenie sieciowe.");
+      } else {
+        // Inny błąd
+        setError("Wystąpił nieznany błąd podczas logowania");
+      }
     }
   };
 
   return (
     <form onSubmit={handleLogin} className="login-form">
-      <h2>Login</h2>
+      <h2>Logowanie</h2>
+      {error && <div className="error-message">{error}</div>}
       <div className="form-group">
-        <label htmlFor="username">Username</label>
+        <label htmlFor="username">Nazwa użytkownika</label>
         <input
           type="text"
           id="username"
@@ -39,7 +59,7 @@ const LoginForm = () => {
         />
       </div>
       <div className="form-group">
-        <label htmlFor="password">Password</label>
+        <label htmlFor="password">Hasło</label>
         <input
           type="password"
           id="password"
@@ -49,7 +69,7 @@ const LoginForm = () => {
         />
       </div>
       <button type="submit" className="login-button">
-        Login
+        Zaloguj się
       </button>
     </form>
   );
