@@ -1,6 +1,6 @@
-package com.auth.jwt.data.repository.employee;
+package com.auth.jwt.data.repository.auth.employee;
 
-import com.auth.jwt.data.entity.employee.Employee;
+import com.auth.jwt.data.entity.auth.employee.Employee;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;

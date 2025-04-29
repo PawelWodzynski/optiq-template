@@ -13,6 +13,7 @@ services:
     volumes:
       - db-data:/var/lib/mysql
       - ./sql-scripts/auth-db.sql:/docker-entrypoint-initdb.d/1-auth-db.sql
+      - ./sql-scripts/app-data-db.sql:/docker-entrypoint-initdb.d/2-app-data-db.sql
     networks:
       - app-network
     healthcheck:
@@ -20,7 +21,6 @@ services:
       interval: 5s
       timeout: 5s
       retries: 10
-
   # Backend - Spring Boot
   backend:
     build:
@@ -28,10 +28,16 @@ services:
       dockerfile: Dockerfile
     container_name: app-backend
     environment:
+      # Auth DB config
       SPRING_DATASOURCE_URL: jdbc:mysql://db:3306/authjwt
       SPRING_DATASOURCE_USERNAME: root
       SPRING_DATASOURCE_PASSWORD: password
       SPRING_JPA_HIBERNATE_DDL_AUTO: update
+      # App Data DB config
+      SPRING_DATASOURCE_APP_DATA_URL: jdbc:mysql://db:3306/app_data
+      SPRING_DATASOURCE_APP_DATA_USERNAME: root
+      SPRING_DATASOURCE_APP_DATA_PASSWORD: password
+      SPRING_DATASOURCE_APP_DATA_HIBERNATE_HBM2DDL_AUTO: update
     ports:
       - "8080:8080"
     depends_on:
@@ -39,7 +45,6 @@ services:
         condition: service_healthy
     networks:
       - app-network
-
   # Frontend - React
   frontend:
     build:
@@ -54,10 +59,8 @@ services:
       - backend
     networks:
       - app-network
-
 networks:
   app-network:
     driver: bridge
-
 volumes:
   db-data:

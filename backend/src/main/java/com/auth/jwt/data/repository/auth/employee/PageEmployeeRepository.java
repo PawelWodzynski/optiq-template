@@ -1,6 +1,6 @@
-package com.auth.jwt.data.repository.employee;
+package com.auth.jwt.data.repository.auth.employee;
 
-import com.auth.jwt.data.entity.employee.Employee;
+import com.auth.jwt.data.entity.auth.employee.Employee;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;

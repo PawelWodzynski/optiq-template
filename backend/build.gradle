@@ -37,6 +37,10 @@ dependencies {
 	// Spring Boot Starter for security
 	implementation 'org.springframework.boot:spring-boot-starter-security'
 
+	// Lombok
+	compileOnly 'org.projectlombok:lombok'
+	annotationProcessor 'org.projectlombok:lombok'
+
 	// Spring Boot Starter for validation
 	implementation 'org.springframework.boot:spring-boot-starter-validation'
 

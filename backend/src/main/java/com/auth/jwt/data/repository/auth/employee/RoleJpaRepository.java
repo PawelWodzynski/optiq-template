@@ -1,6 +1,6 @@
-package com.auth.jwt.data.repository.employee;
+package com.auth.jwt.data.repository.auth.employee;
 
-import com.auth.jwt.data.entity.employee.Role;
+import com.auth.jwt.data.entity.auth.employee.Role;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 

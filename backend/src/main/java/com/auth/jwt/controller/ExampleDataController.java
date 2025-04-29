@@ -2,8 +2,8 @@ package com.auth.jwt.controller;
 
 
 
-import com.auth.jwt.data.entity.employee.Employee;
-import com.auth.jwt.data.repository.employee.EmployeeJpaRepository;
+import com.auth.jwt.data.entity.auth.employee.Employee;
+import com.auth.jwt.data.repository.auth.employee.EmployeeJpaRepository;
 import com.auth.jwt.security.UserAuthProviderParam;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;

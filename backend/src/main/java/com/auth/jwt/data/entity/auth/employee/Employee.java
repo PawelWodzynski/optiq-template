@@ -1,7 +1,7 @@
-package com.auth.jwt.data.entity.employee;
+package com.auth.jwt.data.entity.auth.employee;
 
 import jakarta.persistence.*;
-import java.util.ArrayList;
+
 import java.util.Collection;
 import java.util.List;
 

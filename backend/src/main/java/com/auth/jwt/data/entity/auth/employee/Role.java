@@ -1,4 +1,4 @@
-package com.auth.jwt.data.entity.employee;
+package com.auth.jwt.data.entity.auth.employee;
 
 import jakarta.persistence.*;
 import org.springframework.security.core.GrantedAuthority;
