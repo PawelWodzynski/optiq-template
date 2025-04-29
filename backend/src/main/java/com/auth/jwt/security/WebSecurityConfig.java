@@ -1,5 +1,6 @@
 package com.auth.jwt.security;
 
+import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -22,15 +23,14 @@ import javax.sql.DataSource;
 
 @Configuration
 @EnableWebSecurity
+@RequiredArgsConstructor // Use Lombok for constructor injection
 public class WebSecurityConfig {
 
     private final UserAuthenticationEntryPoint userAuthenticationEntryPoint;
-    private final UserAuthProvider userAuthProvider;
+    // Inject the Spring-managed JwtAuthFilter bean instead of UserAuthProvider
+    private final JwtAuthFilter jwtAuthFilter; 
 
-    public WebSecurityConfig(UserAuthenticationEntryPoint userAuthenticationEntryPoint, UserAuthProvider userAuthProvider) {
-        this.userAuthenticationEntryPoint = userAuthenticationEntryPoint;
-        this.userAuthProvider = userAuthProvider;
-    }
+    // Removed constructor that manually created JwtAuthFilter
 
     @Bean
     public UserDetailsManager userDetailsManager(@Qualifier("authDataSource")DataSource dataSource) {
@@ -79,7 +79,8 @@ public class WebSecurityConfig {
                                 .requestMatchers("/login", "/register").permitAll()
                                 .requestMatchers("/swagger-ui/**", "/v3/api-docs/**", "/swagger-resources/**").permitAll()
                                 .anyRequest().authenticated())
-                .addFilterBefore(new JwtAuthFilter(userAuthProvider), BasicAuthenticationFilter.class)
+                // Use the injected jwtAuthFilter bean
+                .addFilterBefore(jwtAuthFilter, BasicAuthenticationFilter.class) 
                 .exceptionHandling(exception ->
                         exception.authenticationEntryPoint(userAuthenticationEntryPoint))
                 .formLogin(form ->
@@ -103,3 +104,4 @@ public class WebSecurityConfig {
                 .requestMatchers("/swagger-resources/**");
     }
 }
+
