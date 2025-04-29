@@ -15,41 +15,25 @@ import org.springframework.stereotype.Component;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.util.Date;
 import java.util.List;
 import java.util.stream.Collectors;
 
 @Component
-public class UserAuthProvider {
+public class UserAuthProviderParam {
 
-    private static final Logger logger = LoggerFactory.getLogger(UserAuthProvider.class);
+    private static final Logger logger = LoggerFactory.getLogger(UserAuthProviderParam.class);
     private final String secretKey;
     private final EmployeeJpaRepository employeeRepository;
 
-    public UserAuthProvider(@Value("${security.jwt.token.secret.key}") String secretKey,
-                            EmployeeJpaRepository employeeRepository) {
+    public UserAuthProviderParam(@Value("${security.jwt.token.secret.key}") String secretKey,
+                                 EmployeeJpaRepository employeeRepository) {
         this.secretKey = secretKey;
         this.employeeRepository = employeeRepository;
     }
 
-    public String createToken(String username) {
-        // Set token expiration time, for example, 10 hours
-        long expirationTime = 10 * 60 * 60 * 1000;
-        logger.debug("Tworzenie tokenu dla użytkownika: {}", username);
-
-        String token = JWT.create()
-                .withIssuer(username)
-                .withIssuedAt(new Date())
-                .withExpiresAt(new Date(System.currentTimeMillis() + expirationTime))
-                .sign(Algorithm.HMAC256(secretKey));
-
-        logger.debug("Token utworzony pomyślnie");
-        return token;
-    }
-
     public Authentication validateToken(String token) {
         try {
-            logger.debug("Walidacja tokenu JWT");
+            logger.debug("Walidacja tokenu JWT z parametru");
             JWTVerifier verifier = JWT.require(Algorithm.HMAC256(secretKey)).build();
             DecodedJWT decoded = verifier.verify(token);
 
@@ -69,7 +53,7 @@ public class UserAuthProvider {
             logger.debug("Token zwalidowany pomyślnie dla użytkownika: {}", username);
             return new UsernamePasswordAuthenticationToken(user, null, authorities);
         } catch (JWTVerificationException e) {
-            logger.error("Błąd walidacji tokenu JWT: {}", e.getMessage());
+            logger.error("Błąd walidacji tokenu JWT z parametru: {}", e.getMessage());
             throw new RuntimeException("Invalid token", e);
         }
     }

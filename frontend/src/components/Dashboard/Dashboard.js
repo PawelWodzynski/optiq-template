@@ -4,7 +4,8 @@ import {
   FaGithub, FaDocker, FaAws,
   FaUser, FaBell, FaCog, FaSearch,
   FaChevronDown, FaEnvelope, FaSignOutAlt,
-  FaChevronUp, FaGlobe, FaSpinner, FaCheckCircle, FaTimesCircle, FaChartLine, FaLanguage
+  FaChevronUp, FaGlobe, FaSpinner, FaCheckCircle, FaTimesCircle, FaChartLine, FaLanguage,
+  FaLock, FaKey
 } from 'react-icons/fa';
 import { 
   SiTailwindcss, SiVite, SiJavascript, 
@@ -23,6 +24,7 @@ const Dashboard = () => {
   const [isReactIconsExpanded, setIsReactIconsExpanded] = useState(false);
   const [isI18NextExpanded, setIsI18NextExpanded] = useState(false);
   const [isAxiosExpanded, setIsAxiosExpanded] = useState(false);
+  const [isApiAuthExpanded, setIsApiAuthExpanded] = useState(false);
 
   // Stan bibliotek
   const [libraryStatus, setLibraryStatus] = useState({
@@ -31,6 +33,14 @@ const Dashboard = () => {
     reactIcons: true,
     i18next: true,
     axios: true
+  });
+
+  // Stan dla API Authorization
+  const [apiAuthStatus, setApiAuthStatus] = useState({
+    loading: false,
+    success: null,
+    message: '',
+    error: null
   });
 
   // Dane do wykresu Recharts
@@ -61,6 +71,41 @@ const Dashboard = () => {
       console.log('Setting language manually to:', lang);
       // Fallback: zapisz preferencję w localStorage
       localStorage.setItem('language', lang);
+    }
+  };
+
+  // Funkcja do testowania autoryzacji API
+  const testApiAuthorization = async () => {
+    setApiAuthStatus({
+      loading: true,
+      success: null,
+      message: '',
+      error: null
+    });
+
+    try {
+      const token = localStorage.getItem('token');
+      
+      if (!token) {
+        throw new Error('Token nie został znaleziony w localStorage');
+      }
+
+      // Wykonujemy request z tokenem jako parametrem zapytania
+      const response = await axios.get(`/example/test?token=${token}`);
+      
+      setApiAuthStatus({
+        loading: false,
+        success: true,
+        message: response.data.message || 'Autoryzacja API działa poprawnie',
+        error: null
+      });
+    } catch (error) {
+      setApiAuthStatus({
+        loading: false,
+        success: false,
+        message: '',
+        error: error.response?.data?.message || error.message || 'Wystąpił błąd podczas autoryzacji API'
+      });
     }
   };
 
@@ -348,6 +393,84 @@ const Dashboard = () => {
           {isAxiosExpanded && (
             <div className="p-4 space-y-4">
               {renderLibraryStatus('Axios', libraryStatus.axios)}
+            </div>
+          )}
+        </section>
+
+        {/* API Authorization - nowa sekcja */}
+        <section className="bg-gray-800 rounded-xl">
+          <div className="flex justify-between items-center p-4">
+            <div className="flex items-center space-x-3">
+              <FaKey className="h-8 w-8 text-indigo-400" />
+              <h2 className="text-xl font-bold">Api Authorization</h2>
+            </div>
+            <button 
+              onClick={() => setIsApiAuthExpanded(!isApiAuthExpanded)}
+              className="text-gray-400 hover:text-white"
+            >
+              {isApiAuthExpanded ? <FaChevronUp /> : <FaChevronDown />}
+            </button>
+          </div>
+          {isApiAuthExpanded && (
+            <div className="p-4 space-y-4">
+              <div className="bg-gray-700 p-4 rounded-lg">
+                <div className="mb-4">
+                  <p className="mb-2">Test autoryzacji API z wykorzystaniem tokena z localStorage</p>
+                  <p className="text-sm text-gray-400">
+                    Endpoint: <code>/example/test</code> z tokenem jako parametrem zapytania
+                  </p>
+                </div>
+                
+                <button 
+                  onClick={testApiAuthorization}
+                  disabled={apiAuthStatus.loading}
+                  className="bg-indigo-500 hover:bg-indigo-600 px-4 py-2 rounded-lg flex items-center space-x-2 disabled:opacity-50 disabled:cursor-not-allowed"
+                >
+                  {apiAuthStatus.loading ? (
+                    <>
+                      <FaSpinner className="animate-spin" />
+                      <span>Testowanie...</span>
+                    </>
+                  ) : (
+                    <>
+                      <FaLock />
+                      <span>Testuj autoryzację API</span>
+                    </>
+                  )}
+                </button>
+                
+                {apiAuthStatus.success !== null && (
+                  <div className={`mt-4 p-3 rounded-lg ${apiAuthStatus.success ? 'bg-green-700' : 'bg-red-700'}`}>
+                    <div className="flex items-center space-x-2">
+                      {apiAuthStatus.success ? (
+                        <>
+                          <FaCheckCircle className="text-green-400" />
+                          <span className="font-bold">Sukces</span>
+                        </>
+                      ) : (
+                        <>
+                          <FaTimesCircle className="text-red-400" />
+                          <span className="font-bold">Błąd</span>
+                        </>
+                      )}
+                    </div>
+                    <p className="mt-2">
+                      {apiAuthStatus.success 
+                        ? apiAuthStatus.message 
+                        : apiAuthStatus.error}
+                    </p>
+                  </div>
+                )}
+                
+                <div className="mt-4 bg-gray-800 p-3 rounded border border-gray-700">
+                  <p className="text-sm text-gray-400 mb-1">Aktualny token:</p>
+                  <div className="bg-gray-900 p-2 rounded overflow-x-auto">
+                    <code className="text-xs break-all text-green-400">
+                      {localStorage.getItem('token') || 'Brak tokenu w localStorage'}
+                    </code>
+                  </div>
+                </div>
+              </div>
             </div>
           )}
         </section>
