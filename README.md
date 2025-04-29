@@ -1,4 +1,3 @@
-Rozumiem, chcesz po prostu cały tekst README.md jako czysty tekst, który możesz od razu skopiować. Oto pełna treść README:
 # Docker Nginx Server
 
 Ten projekt zawiera konfigurację Docker do uruchomienia serwera Nginx z plikami HTML.
