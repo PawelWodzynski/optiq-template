@@ -52,8 +52,11 @@ dependencies {
 
 	// JWT
 	implementation 'com.auth0:java-jwt:4.0.0'
+}
 
-
+// Dodaj tę konfigurację, aby włączyć flagę -parameters
+tasks.withType(JavaCompile) {
+	options.compilerArgs.add('-parameters')
 }
 
 tasks.named('test') {
