@@ -30,5 +30,3 @@ Po zastąpieniu pliku index.html, uruchom projekt za pomocą:
 ```bash
 docker-compose up
 Serwer będzie dostępny pod adresem http://localhost:8080
-
-To cały tekst README.md, który możesz skopiować w całości.
