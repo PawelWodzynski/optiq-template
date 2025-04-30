@@ -1,5 +1,5 @@
 import React from 'react';
-import styles from './AxiosSection.module.css';
+// import styles from './AxiosSection.module.css'; // Remove CSS module import
 import { SiAxios } from 'react-icons/si';
 import { FaChevronUp, FaChevronDown } from 'react-icons/fa';
 import LibraryStatusIndicator from '../LibraryStatusIndicator';
@@ -9,20 +9,22 @@ const AxiosSection = ({ libraryStatus }) => {
   const { isExpanded, toggleExpand } = useAxiosSectionLogic();
 
   return (
-    <section className={styles.sectionContainer}> {/* Use styles from CSS module */}
-      <div className={styles.header} onClick={toggleExpand}> {/* Make header clickable */}
-        <div className={styles.titleContainer}> {/* Use styles from CSS module */}
-          <SiAxios className={styles.icon} /> {/* Use styles from CSS module */}
-          <h2 className={styles.title}>Axios</h2> {/* Use styles from CSS module */}
+    // Restore Tailwind classes from original Dashboard.js
+    <section className="bg-gray-800 rounded-xl">
+      <div className="flex justify-between items-center p-4 cursor-pointer" onClick={toggleExpand}> {/* Add cursor-pointer */}
+        <div className="flex items-center space-x-3">
+          <SiAxios className="h-8 w-8 text-yellow-400" />
+          <h2 className="text-xl font-bold">Axios</h2>
         </div>
         <button 
-          className={styles.toggleButton} /* Use styles from CSS module */
+          className="text-gray-400 hover:text-white"
         >
           {isExpanded ? <FaChevronUp /> : <FaChevronDown />}
         </button>
       </div>
       {isExpanded && (
-        <div className={styles.content}> {/* Use styles from CSS module */}
+        // Restore Tailwind classes for content area
+        <div className="p-4 space-y-4">
           <LibraryStatusIndicator libraryName='Axios' status={libraryStatus} />
           {/* No additional content needed for Axios section based on original code */}
         </div>

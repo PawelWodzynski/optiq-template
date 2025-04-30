@@ -1,28 +1,30 @@
 import React from 'react';
 import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer } from 'recharts';
-import styles from './StatusChart.module.css';
+// import styles from './StatusChart.module.css'; // Remove CSS module import
 import { useStatusChartLogic } from './StatusChart';
 
 const StatusChart = ({ data }) => {
-  // Basic chart data - might be passed as props or fetched in a real scenario
-  const { chartData } = useStatusChartLogic(data); // Pass initial data if needed
+  const { chartData } = useStatusChartLogic(data);
 
   if (!chartData || chartData.length === 0) {
-    return <div className={styles.noData}>No chart data available</div>;
+    // Use Tailwind for 'no data' message
+    return <div className="text-center text-gray-500 py-4">No chart data available</div>;
   }
 
   return (
-    <div className={styles.chartContainer}> {/* Use styles from CSS module */}
+    // Use Tailwind for chart container height (adjust as needed, h-64 is an example)
+    <div className="h-64 w-full"> 
       <ResponsiveContainer width="100%" height="100%">
         <LineChart data={chartData}>
-          <CartesianGrid strokeDasharray="3 3" stroke="#4b5563" /> {/* Adjusted grid color */}
-          <XAxis dataKey="name" stroke="#9ca3af" /> {/* Adjusted axis color */}
-          <YAxis stroke="#9ca3af" /> {/* Adjusted axis color */}
+          {/* Use Tailwind colors for chart elements */}
+          <CartesianGrid strokeDasharray="3 3" stroke="#4b5563" /> {/* gray-600 */}
+          <XAxis dataKey="name" stroke="#9ca3af" /> {/* gray-400 */}
+          <YAxis stroke="#9ca3af" /> {/* gray-400 */}
           <Tooltip 
-            contentStyle={{ backgroundColor: '#1f2937', border: '1px solid #374151' }} 
-            itemStyle={{ color: '#d1d5db' }}
+            contentStyle={{ backgroundColor: '#1f2937', border: '1px solid #374151' }} /* gray-800, gray-700 */
+            itemStyle={{ color: '#d1d5db' }} /* gray-300 */
           />
-          <Legend wrapperStyle={{ color: '#d1d5db' }}/>
+          <Legend wrapperStyle={{ color: '#d1d5db' }}/> {/* gray-300 */}
           <Line type="monotone" dataKey="pv" stroke="#8884d8" />
           <Line type="monotone" dataKey="uv" stroke="#82ca9d" />
         </LineChart>

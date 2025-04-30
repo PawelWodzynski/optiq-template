@@ -1,19 +1,20 @@
 import React from 'react';
-import styles from './LibraryStatusIndicator.module.css';
+// import styles from './LibraryStatusIndicator.module.css'; // Remove CSS module import
 import { FaCheckCircle, FaTimesCircle } from 'react-icons/fa';
 
 const LibraryStatusIndicator = ({ libraryName, status }) => {
   return (
-    <div className={styles.statusContainer}> {/* Use styles from CSS module */}
+    // Restore Tailwind classes based on original Dashboard.js context
+    <div className="flex items-center space-x-2">
       {status ? (
         <>
-          <FaCheckCircle className={styles.successIcon} /> {/* Use styles from CSS module */}
-          <span className={styles.successText}>Biblioteka {libraryName} działa</span> {/* Use styles from CSS module */}
+          <FaCheckCircle className="text-green-500" />
+          <span className="text-green-400">Biblioteka {libraryName} działa</span>
         </>
       ) : (
         <>
-          <FaTimesCircle className={styles.errorIcon} /> {/* Use styles from CSS module */}
-          <span className={styles.errorText}>Biblioteka {libraryName} nie działa</span> {/* Use styles from CSS module */}
+          <FaTimesCircle className="text-red-500" />
+          <span className="text-red-400">Biblioteka {libraryName} nie działa</span>
         </>
       )}
     </div>

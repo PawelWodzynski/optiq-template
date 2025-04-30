@@ -1,5 +1,5 @@
 import React from "react";
-import styles from "./Dashboard.module.css"; // Use CSS Module
+// import styles from "./Dashboard.module.css"; // Remove incorrect CSS module import
 import { useDashboardLogic } from "./Dashboard";
 
 // Import Section Components
@@ -23,17 +23,18 @@ const Dashboard = () => {
   const isLoadingChecks = Object.values(libraryStatus).some(status => status === null);
 
   return (
-    <div className={styles.pageContainer}> {/* Use styles */}
+    // Restore Tailwind classes for dark theme and layout from original Dashboard.js
+    <div className="min-h-screen bg-gradient-to-b from-gray-900 to-gray-800 text-white p-6">
       <DashboardHeader />
 
-      {/* Add a loading indicator while checks run */}
+      {/* Add a loading indicator while checks run - Use Tailwind for styling */}
       {isLoadingChecks && (
-        <div className={styles.loadingChecks}>Checking library status...</div>
+        <div className="text-center py-4 text-gray-400">Checking library status...</div>
       )}
 
-      {/* Render sections once checks are done (or handle null state within sections) */}
+      {/* Render sections once checks are done - Use Tailwind for layout */}
       {!isLoadingChecks && (
-        <main className={styles.mainContent}> {/* Use styles */}
+        <main className="max-w-4xl mx-auto space-y-6"> {/* Restore Tailwind layout */}
           <TailwindSection libraryStatus={libraryStatus.tailwind} />
           <RechartsSection 
             libraryStatus={libraryStatus.recharts} 

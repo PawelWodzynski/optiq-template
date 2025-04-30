@@ -1,5 +1,5 @@
 import React from 'react';
-import styles from './I18nextSection.module.css';
+// import styles from './I18nextSection.module.css'; // Remove CSS module import
 import { FaLanguage, FaChevronUp, FaChevronDown } from 'react-icons/fa';
 import LibraryStatusIndicator from '../LibraryStatusIndicator';
 import LanguageSwitcher from './components/LanguageSwitcher';
@@ -15,23 +15,26 @@ const I18nextSection = ({ libraryStatus }) => {
   } = useI18nextSectionLogic();
 
   return (
-    <section className={styles.sectionContainer}> {/* Use styles from CSS module */}
-      <div className={styles.header} onClick={toggleExpand}> {/* Make header clickable */}
-        <div className={styles.titleContainer}> {/* Use styles from CSS module */}
-          <FaLanguage className={styles.icon} /> {/* Use styles from CSS module */}
-          <h2 className={styles.title}>i18next</h2> {/* Use styles from CSS module */}
+    // Restore Tailwind classes from original Dashboard.js
+    <section className="bg-gray-800 rounded-xl">
+      <div className="flex justify-between items-center p-4 cursor-pointer" onClick={toggleExpand}> {/* Add cursor-pointer */}
+        <div className="flex items-center space-x-3">
+          <FaLanguage className="h-8 w-8 text-purple-400" />
+          <h2 className="text-xl font-bold">i18next</h2>
         </div>
         <button 
-          className={styles.toggleButton} /* Use styles from CSS module */
+          className="text-gray-400 hover:text-white"
         >
           {isExpanded ? <FaChevronUp /> : <FaChevronDown />}
         </button>
       </div>
       {isExpanded && (
-        <div className={styles.content}> {/* Use styles from CSS module */}
+        // Restore Tailwind classes for content area
+        <div className="p-4 space-y-4">
           <LibraryStatusIndicator libraryName='i18next' status={libraryStatus} />
           {libraryStatus && (
-            <div className={styles.translationDemo}> {/* Use styles from CSS module */}
+            // Restore Tailwind classes for translation demo area
+            <div className="bg-gray-700 p-4 rounded-lg">
               <p>Aktualny język: {currentLanguage === 'pl' ? 'Polski' : 'English'}</p>
               {/* Use translation function from hook */}
               <p>Tekst testowy: {t('dashboard.welcome', 'Welcome to the dashboard')}</p> 
