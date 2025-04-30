@@ -1,0 +1,22 @@
+.statusContainer {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem; /* Equivalent to space-x-2 */
+}
+
+.successIcon {
+  color: #4ade80; /* Equivalent to text-green-500 */
+}
+
+.successText {
+  color: #4ade80; /* Equivalent to text-green-500 */
+}
+
+.errorIcon {
+  color: #f87171; /* Equivalent to text-red-500 */
+}
+
+.errorText {
+  color: #f87171; /* Equivalent to text-red-500 */
+}
+

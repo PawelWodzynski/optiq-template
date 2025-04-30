@@ -1,0 +1,60 @@
+.tableContainer {
+  overflow-x: auto; /* Equivalent to overflow-x-auto */
+  margin-top: 1rem; /* Add some space above the table */
+}
+
+.table {
+  min-width: 100%; /* Equivalent to min-w-full */
+  background-color: #111827; /* Equivalent to bg-gray-900 */
+  border-radius: 0.5rem; /* Equivalent to rounded-lg */
+  overflow: hidden; /* Equivalent to overflow-hidden */
+  border-collapse: collapse; /* Ensure borders are clean */
+}
+
+.tableHead {
+  background-color: #1f2937; /* Equivalent to bg-gray-800 */
+}
+
+.tableHeader {
+  padding: 0.5rem 1rem; /* Equivalent to px-4 py-2 */
+  text-align: left; /* Equivalent to text-left */
+  font-size: 0.75rem; /* Equivalent to text-xs */
+  line-height: 1rem;
+  font-weight: 500; /* Equivalent to font-medium */
+  color: #9ca3af; /* Equivalent to text-gray-400 */
+  text-transform: uppercase; /* Equivalent to uppercase */
+  letter-spacing: 0.05em; /* Equivalent to tracking-wider */
+}
+
+.tableBody {
+  /* divide-y divide-gray-800 is tricky with pure CSS without extra elements */
+  /* We can apply border-top to each row except the first */
+}
+
+.tableRow {
+  border-top: 1px solid #1f2937; /* Simulates divide-y divide-gray-800 */
+  transition: background-color 0.15s ease-in-out;
+}
+
+.tableRow:first-child {
+  border-top: none; /* Remove border from the first row */
+}
+
+.tableRow:hover {
+  background-color: #1f2937; /* Equivalent to hover:bg-gray-800 */
+}
+
+.tableCell {
+  padding: 0.5rem 1rem; /* Equivalent to px-4 py-2 */
+  white-space: nowrap; /* Equivalent to whitespace-nowrap */
+  font-size: 0.875rem; /* text-sm */
+  color: #d1d5db; /* text-gray-300 or similar */
+}
+
+.noData {
+  text-align: center; /* Equivalent to text-center */
+  padding: 1rem 0; /* Equivalent to py-4 */
+  color: #9ca3af; /* Equivalent to text-gray-400 */
+  margin-top: 1rem;
+}
+
