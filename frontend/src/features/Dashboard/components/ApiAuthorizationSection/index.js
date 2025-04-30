@@ -1,2 +1,2 @@
-export { default } from './ApiAuthorizationSection';
+export { default } from './ApiAuthorizationSection.jsx';
 
