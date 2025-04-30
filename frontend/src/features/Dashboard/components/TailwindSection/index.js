@@ -1,2 +1,2 @@
-export { default } from './TailwindSection';
+export { default } from './TailwindSection.jsx';
 

@@ -1,2 +1,2 @@
-export { default } from './StatusChart';
+export { default } from './StatusChart.jsx';
 
