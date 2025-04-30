@@ -6,7 +6,7 @@ USE `authjwt`;
 --
 DROP TABLE IF EXISTS `employee`;
 CREATE TABLE `employee` (
-  `id` bigint NOT NULL AUTO_INCREMENT,
+  `id` bigint NOT NULL AUTO_INCREMENT,  -- Zmieniono z int na bigint
   `username` varchar(50) NOT NULL,
   `password` char(80) NOT NULL,
   `first_name` varchar(50) NOT NULL,
