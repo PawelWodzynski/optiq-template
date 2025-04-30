@@ -1,6 +1,7 @@
 import React from 'react';
 import styles from './TailwindSection.module.css';
-import { SiTailwindcss, FaChevronUp, FaChevronDown } from 'react-icons/fa'; // Assuming FaChevronUp/Down are needed
+import { FaChevronUp, FaChevronDown } from 'react-icons/fa';
+import { SiTailwindcss } from 'react-icons/si';
 import LibraryStatusIndicator from '../LibraryStatusIndicator';
 import { useTailwindSectionLogic } from './TailwindSection';
 
