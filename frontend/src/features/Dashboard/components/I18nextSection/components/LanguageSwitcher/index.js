@@ -1,2 +1,2 @@
-export { default } from './LanguageSwitcher';
+export { default } from './LanguageSwitcher.jsx';
 

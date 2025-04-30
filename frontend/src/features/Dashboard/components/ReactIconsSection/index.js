@@ -1,2 +1,2 @@
-export { default } from './ReactIconsSection';
+export { default } from './ReactIconsSection.jsx';
 

@@ -1,2 +1,2 @@
-export { default } from './LibraryStatusIndicator';
+export { default } from './LibraryStatusIndicator.jsx';
 

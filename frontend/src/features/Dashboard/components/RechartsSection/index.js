@@ -1,2 +1,2 @@
-export { default } from './RechartsSection';
+export { default } from './RechartsSection.jsx';
 

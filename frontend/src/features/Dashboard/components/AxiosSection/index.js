@@ -1,2 +1,2 @@
-export { default } from './AxiosSection';
+export { default } from './AxiosSection.jsx';
 

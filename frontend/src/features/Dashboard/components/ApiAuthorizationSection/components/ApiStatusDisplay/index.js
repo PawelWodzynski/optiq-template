@@ -1,2 +1,2 @@
-export { default } from './ApiStatusDisplay';
+export { default } from './ApiStatusDisplay.jsx';
 

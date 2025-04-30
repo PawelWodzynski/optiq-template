@@ -1,2 +1,2 @@
-export { default } from './TokenDisplay';
+export { default } from './TokenDisplay.jsx';
 

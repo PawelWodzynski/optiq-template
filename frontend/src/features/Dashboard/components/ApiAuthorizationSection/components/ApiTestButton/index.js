@@ -1,2 +1,2 @@
-export { default } from './ApiTestButton';
+export { default } from './ApiTestButton.jsx';
 
