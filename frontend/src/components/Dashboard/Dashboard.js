@@ -5,7 +5,7 @@ import {
   FaUser, FaBell, FaCog, FaSearch,
   FaChevronDown, FaEnvelope, FaSignOutAlt,
   FaChevronUp, FaGlobe, FaSpinner, FaCheckCircle, FaTimesCircle, FaChartLine, FaLanguage,
-  FaLock, FaKey
+  FaLock, FaKey, FaDatabase, FaTable
 } from 'react-icons/fa';
 import { 
   SiTailwindcss, SiVite, SiJavascript, 
@@ -40,7 +40,8 @@ const Dashboard = () => {
     loading: false,
     success: null,
     message: '',
-    error: null
+    error: null,
+    data: null  // Dodane pole dla danych z example_data
   });
 
   // Dane do wykresu Recharts
@@ -80,7 +81,8 @@ const Dashboard = () => {
       loading: true,
       success: null,
       message: '',
-      error: null
+      error: null,
+      data: null
     });
 
     try {
@@ -90,21 +92,29 @@ const Dashboard = () => {
         throw new Error('Token nie został znaleziony w localStorage');
       }
 
-      // Wykonujemy request z tokenem jako parametrem zapytania
+      console.log('Wykonuję test API z tokenem:', token);
+      
+      // Przesyłamy token jako parametr URL (preferowana metoda)
       const response = await axios.get(`/example/test?token=${token}`);
+      
+      console.log('Odpowiedź API:', response);
       
       setApiAuthStatus({
         loading: false,
         success: true,
-        message: response.data.message || 'Autoryzacja API działa poprawnie',
-        error: null
+        message: response.data?.message || 'Autoryzacja API działa poprawnie',
+        error: null,
+        data: response.data?.data || null  // Pobieramy dane z odpowiedzi
       });
     } catch (error) {
+      console.error('Błąd API:', error);
+      
       setApiAuthStatus({
         loading: false,
         success: false,
         message: '',
-        error: error.response?.data?.message || error.message || 'Wystąpił błąd podczas autoryzacji API'
+        error: error.response?.data?.message || error.message || 'Wystąpił błąd podczas autoryzacji API',
+        data: null
       });
     }
   };
@@ -227,6 +237,44 @@ const Dashboard = () => {
       )}
     </div>
   );
+
+  // Renderowanie tabeli z danymi example_data
+  const renderExampleDataTable = (data) => {
+    if (!data || data.length === 0) {
+      return (
+        <div className="text-center py-4 text-gray-400">
+          Brak danych do wyświetlenia
+        </div>
+      );
+    }
+
+    return (
+      <div className="overflow-x-auto">
+        <table className="min-w-full bg-gray-900 rounded-lg overflow-hidden">
+          <thead className="bg-gray-800">
+            <tr>
+              <th className="px-4 py-2 text-left text-xs font-medium text-gray-400 uppercase tracking-wider">ID</th>
+              <th className="px-4 py-2 text-left text-xs font-medium text-gray-400 uppercase tracking-wider">Data Cell 1</th>
+              <th className="px-4 py-2 text-left text-xs font-medium text-gray-400 uppercase tracking-wider">Data Cell 2</th>
+              <th className="px-4 py-2 text-left text-xs font-medium text-gray-400 uppercase tracking-wider">Timestamp</th>
+            </tr>
+          </thead>
+          <tbody className="divide-y divide-gray-800">
+            {data.map((item) => (
+              <tr key={item.id} className="hover:bg-gray-800">
+                <td className="px-4 py-2 whitespace-nowrap">{item.id}</td>
+                <td className="px-4 py-2 whitespace-nowrap">{item.dataCell1}</td>
+                <td className="px-4 py-2 whitespace-nowrap">{item.dataCell2}</td>
+                <td className="px-4 py-2 whitespace-nowrap">
+                  {item.timestampCell ? new Date(item.timestampCell).toLocaleString() : 'N/A'}
+                </td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </div>
+    );
+  };
 
   return (
     <div className="min-h-screen bg-gradient-to-b from-gray-900 to-gray-800 text-white p-6">
@@ -470,6 +518,17 @@ const Dashboard = () => {
                     </code>
                   </div>
                 </div>
+                
+                {/* Nowa sekcja - Tabela z danymi */}
+                {apiAuthStatus.success && apiAuthStatus.data && (
+                  <div className="mt-6">
+                    <div className="flex items-center space-x-2 mb-3">
+                      <FaDatabase className="text-blue-400" />
+                      <h3 className="text-lg font-semibold">Dane z tabeli example_data</h3>
+                    </div>
+                    {renderExampleDataTable(apiAuthStatus.data)}
+                  </div>
+                )}
               </div>
             </div>
           )}

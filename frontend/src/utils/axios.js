@@ -5,7 +5,10 @@ axios.defaults.baseURL = process.env.NODE_ENV === 'production'
   ? '/'  // w produkcji (kontener) używaj relatywnego URL
   : 'http://localhost:8080';  // w developmencie lokalnym
 
-// Opcjonalnie: dodaj interceptory do logowania
+// W tym przypadku nie dodajemy tokena automatycznie
+// Token będzie dodawany jako parametr URL w każdym żądaniu
+
+// Interceptory do logowania
 axios.interceptors.request.use(
   (config) => {
     console.log('Axios Request:', config);
@@ -14,7 +17,7 @@ axios.interceptors.request.use(
   (error) => {
     console.error('Axios Request Error:', error);
     return Promise.reject(error);
-}
+  }
 );
 
 axios.interceptors.response.use(
@@ -23,7 +26,12 @@ axios.interceptors.response.use(
     return response;
   },
   (error) => {
-    console.error('Axios Response Error:', error);
+    console.error('Axios Response Error:', error.response || error.message);
+    if (error.response && error.response.status === 401) {
+      console.log('Unauthorized access - redirecting to login');
+      // Opcjonalnie: przekierowanie do strony logowania
+      // window.location.href = '/';
+    }
     return Promise.reject(error);
   }
 );

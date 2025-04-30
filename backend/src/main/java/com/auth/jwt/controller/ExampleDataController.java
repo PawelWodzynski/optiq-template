@@ -1,8 +1,10 @@
 package com.auth.jwt.controller;
 
+import com.auth.jwt.data.entity.app_data.ExampleData;
 import com.auth.jwt.data.entity.auth.employee.Employee;
+import com.auth.jwt.data.repository.app_data.AppDataRepository;
 import com.auth.jwt.data.repository.auth.employee.EmployeeJpaRepository;
-import com.auth.jwt.security.UserAuthProviderParam; // This seems unused in the controller logic now, but keep the import for now.
+import com.auth.jwt.security.UserAuthProviderParam;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -11,20 +13,22 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 @RestController
 @RequestMapping("/example")
 public class ExampleDataController {
 
-    // Removed unused userAuthProviderParam field
-    private final EmployeeJpaRepository employeeRepository; // Keep repository if needed elsewhere, though not for getCurrentUser anymore.
+    private final EmployeeJpaRepository employeeRepository;
+    private final AppDataRepository appDataRepository;
 
     @Autowired
     public ExampleDataController(EmployeeJpaRepository employeeRepository,
-                                UserAuthProviderParam userAuthProviderParam) { // Keep constructor signature for Spring context
+                                 UserAuthProviderParam userAuthProviderParam,
+                                 AppDataRepository appDataRepository) {
         this.employeeRepository = employeeRepository;
-        // this.userAuthProviderParam = userAuthProviderParam; // Field removed
+        this.appDataRepository = appDataRepository;
     }
 
     /**
@@ -57,20 +61,23 @@ public class ExampleDataController {
     /**
      * Create success response
      * @param message Success message
+     * @param data Optional data to include in the response
      * @return Success response
      */
-    private Map<String, Object> createSuccessResponse(String message) {
+    private Map<String, Object> createSuccessResponse(String message, Object data) {
         Map<String, Object> response = new HashMap<>();
         response.put("success", true);
         response.put("message", message);
+        if (data != null) {
+            response.put("data", data);
+        }
         return response;
     }
 
-
     /**
-     * Test API authorization using the security context populated by JwtAuthFilter.
+     * Test API authorization and fetch all example data
      * @param token JWT token (optional, not used directly as authentication is handled by JwtAuthFilter)
-     * @return Success or Unauthorized response based on authentication status.
+     * @return Success with example data or Unauthorized response
      */
     @GetMapping("/test")
     public ResponseEntity<?> testApiAuthorization(@RequestParam(required = false) String token) {
@@ -79,13 +86,21 @@ public class ExampleDataController {
         if (employee == null) {
             // getCurrentUser failed, likely because the token was invalid or user not found during validation
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
-                    .body(createErrorResponse("Autoryzacja api nie działa - użytkownik nie uwierzytelniony")); // Updated error message
+                    .body(createErrorResponse("Autoryzacja api nie działa - użytkownik nie uwierzytelniony"));
         }
-        // User is authenticated, proceed.
-        // Long employeeId = employee.getId(); // Can get ID if needed
-        return ResponseEntity.ok(createSuccessResponse("Autoryzacja api działa dla użytkownika: " + employee.getUserName())); // Include username in success message
+
+        try {
+            // Fetch all records from example_data table
+            List<ExampleData> exampleDataList = appDataRepository.findAll();
+
+            // Return success response with data
+            return ResponseEntity.ok(createSuccessResponse(
+                    "Autoryzacja api działa dla użytkownika: " + employee.getUserName(),
+                    exampleDataList
+            ));
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .body(createErrorResponse("Błąd podczas pobierania danych: " + e.getMessage()));
+        }
     }
-
-
 }
-

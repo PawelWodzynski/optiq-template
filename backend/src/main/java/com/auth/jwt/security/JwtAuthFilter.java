@@ -36,24 +36,25 @@ public class JwtAuthFilter extends OncePerRequestFilter {
             return;
         }
 
-        System.out.println("Processing request: " + request.getMethod() + " " + request.getRequestURI() + "?" + request.getQueryString());
+        System.out.println("Processing request: " + request.getMethod() + " " + request.getRequestURI() +
+                (request.getQueryString() != null ? "?" + request.getQueryString() : ""));
 
-        // Check Authorization header
-        String header = request.getHeader(HttpHeaders.AUTHORIZATION);
-        System.out.println("Authorization Header: " + header);
+        // Check token from parameter first (preferred method)
+        String token = request.getParameter("token");
+        System.out.println("Token from parameter: " + token);
 
-        String token = null;
+        // If not found in parameter, check Authorization header
+        if (token == null || token.isEmpty()) {
+            String header = request.getHeader(HttpHeaders.AUTHORIZATION);
+            System.out.println("Authorization Header: " + header);
 
-        if (header != null && header.startsWith("Bearer ")) {
-            token = header.substring(7);
-            System.out.println("Token from header: " + token);
-        } else {
-            // If token not in header, check request parameter
-            token = request.getParameter("token");
-            System.out.println("Token from parameter: " + token);
+            if (header != null && header.startsWith("Bearer ")) {
+                token = header.substring(7);
+                System.out.println("Token from header: " + token);
+            }
         }
 
-        if (token != null) {
+        if (token != null && !token.isEmpty()) {
             try {
                 System.out.println("Attempting to validate token: " + token);
                 var authentication = userAuthProvider.validateToken(token);
@@ -76,8 +77,8 @@ public class JwtAuthFilter extends OncePerRequestFilter {
                 return;
             }
         } else {
-            // No token found in either header or parameter
-            System.out.println("No token found in either header or parameter");
+            // No token found in either parameter or header
+            System.out.println("No token found in either parameter or header");
             SecurityContextHolder.clearContext();
             response.sendError(HttpServletResponse.SC_UNAUTHORIZED, "Wymagane uwierzytelnienie");
             return;
