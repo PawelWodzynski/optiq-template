@@ -9,20 +9,21 @@
 .username-login-field input {
   width: 100%;
   padding: 10px;
-  border: 2px solid #835510;
-  background-color: rgb(70, 69, 69);
-  border-radius: 5px;
+  border: 1px solid #374151;
+  background-color: #1f2937;
+  border-radius: 0.375rem;
   font-size: 16px;
   box-sizing: border-box;
   text-align: center;
-  color: rgb(223, 183, 7);
+  color: white;
 }
 
 .username-login-field input:focus {
-  border-color: #ff9900;
+  border-color: #3b82f6;
   outline: none;
 }
 
 .username-login-field input::placeholder {
   text-align: center;
+  color: #9ca3af;
 }

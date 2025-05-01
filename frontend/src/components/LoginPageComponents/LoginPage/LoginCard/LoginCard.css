@@ -1,11 +1,10 @@
 .login-card {
   height: 40vh;
   width: 35%;
-  border-radius: 5%;
-  border: solid 1px;
-  border-color: orange;
-  background-color: rgb(53, 53, 53);
-  box-shadow: 0 0 10vh 1vh black;
+  border-radius: 0.75rem;
+  border: 1px solid #374151;
+  background-color: #1f2937;
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
 }
 
 .login-card-grid {
