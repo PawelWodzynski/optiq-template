@@ -12,7 +12,7 @@ const ApiAuthorizationSection = ({ apiAuthStatus, onTestApi }) => {
 
   return (
     // Restore Tailwind classes from original Dashboard.js
-    <section className="bg-gray-800 rounded-xl">
+    <section className={`bg-gray-800 rounded-xl ${styles.apiAuthSection}`}>
       <div className="flex justify-between items-center p-4 cursor-pointer" onClick={toggleExpand}> {/* Add cursor-pointer */}
         <div className="flex items-center space-x-3">
           <FaKey className="h-8 w-8 text-indigo-400" /> {/* Adjusted color based on original */} 

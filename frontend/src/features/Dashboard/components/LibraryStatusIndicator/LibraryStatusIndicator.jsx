@@ -5,7 +5,7 @@ import { FaCheckCircle, FaTimesCircle } from 'react-icons/fa';
 const LibraryStatusIndicator = ({ libraryName, status }) => {
   return (
     // Restore Tailwind classes based on original Dashboard.js context
-    <div className="flex items-center space-x-2">
+    <div className={`flex items-center space-x-2 ${styles.indicatorContainer}`}>
       {status ? (
         <>
           <FaCheckCircle className="text-green-500" />

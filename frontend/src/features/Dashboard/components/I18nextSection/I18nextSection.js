@@ -4,18 +4,16 @@ import { useTranslation } from 'react-i18next';
 export const useI18nextSectionLogic = (initialExpanded = false) => {
   const [isExpanded, setIsExpanded] = useState(initialExpanded);
   const { t, i18n } = useTranslation();
-  const [currentLanguage, setCurrentLanguage] = useState(i18n.language || 'en');
+  // Re-introduce state for current language, initialized from i18n or localStorage
+  const [currentLanguage, setCurrentLanguage] = useState(localStorage.getItem("language") || i18n.language || "en");
 
-  // Update local state if i18n language changes externally
+  // Update state when i18n language changes (e.g., via browser detector)
   useEffect(() => {
-    const handleLanguageChanged = (lng) => {
-      setCurrentLanguage(lng);
-    };
-    i18n.on('languageChanged', handleLanguageChanged);
-    return () => {
-      i18n.off('languageChanged', handleLanguageChanged);
-    };
-  }, [i18n]);
+    setCurrentLanguage(i18n.language);
+  }, [i18n.language]);
+
+
+
 
   const toggleExpand = () => {
     setIsExpanded(prev => !prev);
@@ -26,14 +24,18 @@ export const useI18nextSectionLogic = (initialExpanded = false) => {
     if (i18n && typeof i18n.changeLanguage === 'function') {
       try {
         i18n.changeLanguage(lang);
-        // No need to manually set localStorage, i18next-browser-languagedetector handles it
+        // Persist the chosen language in localStorage
+        localStorage.setItem("language", lang);
+        // Update the state immediately for responsiveness, though useEffect will also catch it
+        setCurrentLanguage(lang);
       } catch (error) {
         console.error('Error using i18n.changeLanguage:', error);
       }
     } else {
       console.error('i18n.changeLanguage function not available.');
-      // Fallback or error handling if i18n is not configured correctly
-      setCurrentLanguage(lang); // Update local state as a fallback
+      // Fallback: update state and localStorage directly
+      localStorage.setItem("language", lang);
+      setCurrentLanguage(lang);
     }
   };
 

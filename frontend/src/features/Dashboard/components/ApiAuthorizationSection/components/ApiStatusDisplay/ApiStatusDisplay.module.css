@@ -1,5 +1,38 @@
 /* Styles specific to the ApiStatusDisplay component */
-.statusDisplay {
-  /* Add specific styles if needed */
+.statusContainer {
+  /* Tailwind handles p-4, rounded-lg */
+  /* Add specific padding or margins if needed */
+}
+
+.successBg {
+  /* Tailwind handles bg-green-900 (adjust as needed) */
+  background-color: rgba(16, 185, 129, 0.2); /* Example: Green with opacity */
+  border: 1px solid rgb(16, 185, 129);
+}
+
+.errorBg {
+  /* Tailwind handles bg-red-900 (adjust as needed) */
+  background-color: rgba(239, 68, 68, 0.2); /* Example: Red with opacity */
+  border: 1px solid rgb(239, 68, 68);
+}
+
+.statusHeader {
+  /* Tailwind handles flex, items-center, space-x-2, mb-2 */
+}
+
+.successIcon {
+  /* Tailwind handles text-green-400 */
+}
+
+.errorIcon {
+  /* Tailwind handles text-red-400 */
+}
+
+.statusText {
+  /* Tailwind handles font-bold */
+}
+
+.messageText {
+  /* Tailwind handles text-sm, text-gray-300 */
 }
 

@@ -1,9 +1,26 @@
-.dashboardHeader {
-  /* Styles specific to the header, complementing Tailwind */
-  /* Example: Add a specific border or background if needed */
+/* Styles for the header container */
+.headerContainer {
+  /* Tailwind classes handle flex, justify-between, items-center, mb-10 */
+  /* Add specific padding, background, or borders if needed */
 }
 
-.headerTitle {
-  /* Styles for the h1 title within the header */
+/* Styles for the logo and title container */
+.logoContainer {
+  /* Tailwind classes handle flex, items-center, space-x-4 */
+}
+
+/* Styles for the logo icon */
+.logoIcon {
+  /* Tailwind classes handle h-10, w-10, text-blue-500 */
+}
+
+/* Styles for the main title */
+.title {
+  /* Tailwind classes handle text-3xl, font-bold */
+}
+
+/* Styles for the actions container on the right */
+.actionsContainer {
+  /* Tailwind classes handle flex, items-center, space-x-4 */
 }
 

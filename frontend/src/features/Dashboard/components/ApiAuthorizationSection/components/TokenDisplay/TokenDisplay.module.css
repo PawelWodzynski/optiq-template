@@ -1,9 +1,19 @@
 /* Styles specific to the TokenDisplay component */
-.tokenDisplay {
-  /* Add specific styles if needed */
+.tokenContainer {
+  /* Tailwind handles bg-gray-700, p-4, rounded-lg */
 }
 
-.tokenText {
+.label {
+  /* Tailwind handles text-sm, text-gray-400, mb-1 */
+}
+
+.tokenValueWrapper {
+  /* Tailwind handles bg-gray-900, p-2, rounded */
+}
+
+.tokenValue {
+  /* Tailwind handles text-xs, text-gray-300 */
   word-break: break-all; /* Ensure long tokens wrap */
+  font-family: monospace;
 }
 

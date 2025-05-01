@@ -8,12 +8,12 @@ const StatusChart = ({ data }) => {
 
   if (!chartData || chartData.length === 0) {
     // Use Tailwind for 'no data' message
-    return <div className="text-center text-gray-500 py-4">No chart data available</div>;
+    return <div className={`text-center text-gray-500 py-4 ${styles.noDataMessage}`}>No chart data available</div>;
   }
 
   return (
     // Use Tailwind for chart container height (adjust as needed, h-64 is an example)
-    <div className="h-64 w-full"> 
+    <div className={`h-64 w-full ${styles.chartWrapper}`}> 
       <ResponsiveContainer width="100%" height="100%">
         <LineChart data={chartData}>
           {/* Use Tailwind colors for chart elements */}

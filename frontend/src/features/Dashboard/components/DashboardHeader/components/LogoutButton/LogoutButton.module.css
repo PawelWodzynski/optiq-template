@@ -1,16 +1,16 @@
+/* Styles for the logout button */
 .logoutButton {
-  /* Styles from original .logout-button */
-  padding: 8px 16px;
-  background-color: #dc3545;
-  color: white;
-  border: none;
-  border-radius: 4px;
-  cursor: pointer;
-  font-size: 14px;
-  transition: background-color 0.3s;
+  /* Tailwind classes handle flex, items-center, space-x-2, bg-red-500, hover:bg-red-600, px-4, py-2, rounded-lg, transition-colors */
+  /* Add specific overrides or adjustments if needed */
 }
 
-.logoutButton:hover {
-  background-color: #c82333;
+/* Styles for the icon inside the button, if needed */
+.logoutIcon {
+  /* Tailwind handles spacing via parent's space-x-2 */
+}
+
+/* Styles for the text inside the button, if needed */
+.logoutText {
+  /* Tailwind handles text color (implicitly white due to parent bg) */
 }
 

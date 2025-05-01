@@ -1,5 +1,24 @@
 /* Styles specific to the LanguageSwitcher component */
-.languageSwitcher {
-  /* Add specific styles if needed */
+.switcherContainer {
+  /* Tailwind handles mt-4, space-x-2 */
+}
+
+.button {
+  /* Tailwind handles bg-blue-500, hover:bg-blue-600, px-3, py-1, rounded */
+  /* Add base styles for non-active state */
+  opacity: 0.7;
+  cursor: pointer;
+}
+
+.button:disabled {
+  opacity: 1;
+  cursor: default;
+  /* Tailwind handles disabled state visually if needed, or add specific styles */
+}
+
+.active {
+  /* Styles for the active button */
+  opacity: 1;
+  font-weight: bold;
 }
 

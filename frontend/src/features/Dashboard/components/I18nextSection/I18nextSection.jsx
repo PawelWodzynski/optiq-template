@@ -16,7 +16,7 @@ const I18nextSection = ({ libraryStatus }) => {
 
   return (
     // Restore Tailwind classes from original Dashboard.js
-    <section className="bg-gray-800 rounded-xl">
+    <section className={`bg-gray-800 rounded-xl ${styles.i18nextSection}`}>
       <div className="flex justify-between items-center p-4 cursor-pointer" onClick={toggleExpand}> {/* Add cursor-pointer */}
         <div className="flex items-center space-x-3">
           <FaLanguage className="h-8 w-8 text-purple-400" />

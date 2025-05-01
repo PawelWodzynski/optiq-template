@@ -24,7 +24,7 @@ const Dashboard = () => {
 
   return (
     // Restore Tailwind classes for dark theme and layout from original Dashboard.js
-    <div className="min-h-screen bg-gradient-to-b from-gray-900 to-gray-800 text-white p-6">
+    <div className={`min-h-screen bg-gradient-to-b from-gray-900 to-gray-800 text-white p-6 ${styles.dashboardContainer}`}>
       <DashboardHeader />
 
       {/* Add a loading indicator while checks run - Use Tailwind for styling */}
@@ -34,7 +34,7 @@ const Dashboard = () => {
 
       {/* Render sections once checks are done - Use Tailwind for layout */}
       {!isLoadingChecks && (
-        <main className="max-w-4xl mx-auto space-y-6"> {/* Restore Tailwind layout */}
+        <main className={`max-w-4xl mx-auto space-y-6 ${styles.dashboardContent}`}> {/* Restore Tailwind layout & add module style */}
           <TailwindSection libraryStatus={libraryStatus.tailwind} />
           <RechartsSection 
             libraryStatus={libraryStatus.recharts} 

@@ -1,5 +1,33 @@
 /* Styles specific to the DataTable component */
-.dataTable {
-  /* Add specific styles if needed */
+.noData {
+  /* Tailwind handles text-center, py-4, text-gray-400 */
+}
+
+.tableContainer {
+  /* Tailwind handles overflow-x-auto */
+}
+
+.table {
+  /* Tailwind handles min-w-full, bg-gray-900, rounded-lg, overflow-hidden */
+}
+
+.tableHead {
+  /* Tailwind handles bg-gray-800 */
+}
+
+.tableHeader {
+  /* Tailwind handles px-4, py-2, text-left, text-xs, font-medium, text-gray-400, uppercase, tracking-wider */
+}
+
+.tableBody {
+  /* Tailwind handles divide-y, divide-gray-800 */
+}
+
+.tableRow {
+  /* Tailwind handles hover:bg-gray-800 */
+}
+
+.tableCell {
+  /* Tailwind handles px-4, py-2, whitespace-nowrap */
 }
 

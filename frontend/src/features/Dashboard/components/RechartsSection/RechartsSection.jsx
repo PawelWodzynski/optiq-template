@@ -10,7 +10,7 @@ const RechartsSection = ({ libraryStatus, chartData }) => {
 
   return (
     // Restore Tailwind classes from original Dashboard.js
-    <section className="bg-gray-800 rounded-xl">
+    <section className={`bg-gray-800 rounded-xl ${styles.rechartsSection}`}>
       <div className="flex justify-between items-center p-4 cursor-pointer" onClick={toggleExpand}> {/* Add cursor-pointer */}
         <div className="flex items-center space-x-3">
           <FaChartLine className="h-8 w-8 text-green-400" />

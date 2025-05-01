@@ -1,5 +1,15 @@
 /* Styles specific to the ApiTestButton component */
 .testButton {
-  /* Add specific styles if needed */
+  /* Tailwind handles bg-indigo-500, hover:bg-indigo-600, text-white, font-bold, py-2, px-4, rounded, flex, items-center, space-x-2, disabled:opacity-50 */
+  /* Add specific overrides or adjustments if needed */
+}
+
+.spinner {
+  /* Tailwind handles animate-spin */
+  /* Add specific animation details if needed */
+}
+
+.buttonText {
+  /* Tailwind handles text color implicitly */
 }
 
