@@ -11,7 +11,7 @@ const DashboardHeader = () => {
     <header className={styles.headerContainer}> {/* Use styles from CSS module */}
       <div className={styles.logoContainer}> {/* Use styles from CSS module */}
         <FaReact className={styles.logoIcon} /> {/* Use styles from CSS module */}
-        <h1 className={styles.title}>Dashboard</h1> {/* Use styles from CSS module */}
+        <h1 className={styles.title}>ExampleDashboard</h1> {/* Use styles from CSS module */}
       </div>
       <div className={styles.actionsContainer}> {/* Use styles from CSS module */}
         <LogoutButton />
