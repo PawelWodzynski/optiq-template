@@ -65,14 +65,8 @@ export const useDashboardLogic = () => {
       if (isMounted) setLibraryStatus(prev => ({ ...prev, i18next: false }));
     }
 
-    // Check Axios (make a simple request)
-    axios.get('https://jsonplaceholder.typicode.com/posts/1')
-      .then(() => {
-        if (isMounted) setLibraryStatus(prev => ({ ...prev, axios: true }));
-      })
-      .catch(() => {
-        if (isMounted) setLibraryStatus(prev => ({ ...prev, axios: false }));
-      });
+    // Check Axios (check if imported object exists)
+    if (isMounted) setLibraryStatus(prev => ({ ...prev, axios: !!axios }));
 
     return () => {
       isMounted = false;
