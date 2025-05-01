@@ -3,11 +3,18 @@ import styles from './ApiTestButton.module.css';
 import { FaSpinner, FaLock } from 'react-icons/fa';
 
 const ApiTestButton = ({ onClick, isLoading }) => {
+  // Wrap the original onClick to prevent default button behavior
+  const handleClick = (event) => {
+    event.preventDefault(); // Prevent default form submission/navigation
+    onClick(); // Call the original handler passed as prop
+  };
+
   return (
     <button 
-      onClick={onClick}
+      onClick={handleClick} // Use the wrapped handler
       disabled={isLoading}
       className={styles.testButton} // Use styles from CSS module
+      type="button" // Explicitly set type to button to avoid potential submission issues
     >
       {isLoading ? (
         <>
