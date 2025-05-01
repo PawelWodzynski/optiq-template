@@ -1,8 +1,11 @@
 import React from "react";
-import "./WorkFlowLogo.css";
+import styles from "./WorkFlowLogo.module.css"; // Import CSS module
 
 const WorkFlowLogo = () => {
-  return <p className="workflow-logo navbar-logo-item-1 ">WorkFlow</p>;
+  // Apply classes using styles object
+  // Assuming 'workflowLogo' and 'navbarLogoItem1' are defined in the module
+  return <p className={`${styles.workflowLogo || ''} ${styles.navbarLogoItem1 || ''}`}>WorkFlow</p>;
 };
 
 export default WorkFlowLogo;
+

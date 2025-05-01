@@ -1,13 +1,16 @@
 import React from "react";
-import "./Navbar.css";
+import styles from "./Navbar.module.css"; // Import CSS module
 import WorkFlowLogo from "./WorkFlowLogo/WorkFlowLogo";
 
 const LoginPageNavbar = () => {
   return (
-    <div className="navbar navbar-grid">
+    // Apply classes using styles object
+    // Assuming 'navbar' and 'navbarGrid' are defined in the module
+    <div className={`${styles.navbar || ''} ${styles.navbarGrid || ''}`}>
       <WorkFlowLogo />
     </div>
   );
 };
 
 export default LoginPageNavbar;
+

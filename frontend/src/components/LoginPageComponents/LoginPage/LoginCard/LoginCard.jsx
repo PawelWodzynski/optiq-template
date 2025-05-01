@@ -1,13 +1,15 @@
 import React from "react";
-import "./LoginCard.css";
+import styles from "./LoginCard.module.css"; // Import CSS module
 import LoginForm from "./LoginForm/LoginForm";
 
 const LoginCard = () => {
   return (
-    <div className="login-card">
+    // Apply class using styles object
+    <div className={styles.loginCard}>
       <LoginForm />
     </div>
   );
 };
 
 export default LoginCard;
+

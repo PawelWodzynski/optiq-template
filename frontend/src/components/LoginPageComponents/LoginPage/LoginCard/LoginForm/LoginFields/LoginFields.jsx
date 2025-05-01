@@ -1,11 +1,12 @@
 import React from "react";
-import "./LoginFields.css";
+import styles from "./LoginFields.module.css"; // Import CSS module
 import UsernameField from "./UsernameField/UsernameField";
 import PasswordField from "./PasswordField/PasswordField";
 
 const LoginFields = ({ login, setLogin, password, setPassword }) => {
   return (
-    <div className="login-fields">
+    // Apply class using styles object
+    <div className={styles.loginFields}>
       <UsernameField login={login} setLogin={setLogin} />
       <PasswordField password={password} setPassword={setPassword} />
     </div>
@@ -13,3 +14,4 @@ const LoginFields = ({ login, setLogin, password, setPassword }) => {
 };
 
 export default LoginFields;
+

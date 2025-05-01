@@ -1,12 +1,13 @@
 import React from "react";
-import "./LoginPageLayout.css";
+import styles from "./LoginPageLayout.module.css"; // Import CSS module
 import LoginPageNavbar from "../Navbar/Navbar";
 import LoginContentContainer from "../LoginContentContainer/LoginContentContainer";
 
 const LoginPageLayout = () => {
   return (
     <>
-      <div className="login-page-grid">
+      {/* Apply class using styles object */}
+      <div className={styles.loginPageGrid}>
         <LoginPageNavbar />
         <LoginContentContainer />
       </div>
@@ -15,3 +16,4 @@ const LoginPageLayout = () => {
 };
 
 export default LoginPageLayout;
+
