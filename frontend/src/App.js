@@ -1,6 +1,7 @@
 import React from "react";
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
-import LoginPage from "./features/Login"; // Use index.js for feature export
+import LandingPage from "./features/LandingPage"; // Import the new Landing Page
+import LoginPage from "./features/Login"; // Re-add LoginPage import
 import Dashboard from "./features/Dashboard";
 import ProtectedRoute from "./ProtectedRoute/ProtectedRoute";
 import "./App.css";
@@ -14,10 +15,12 @@ function App() {
           path="/dashboard"
           element={<ProtectedRoute element={<Dashboard />} />}
         />
-        <Route path="/" element={<LoginPage />} />
+        {/* Update root path to show LandingPage */}
+        <Route path="/" element={<LandingPage />} /> 
       </Routes>
     </Router>
   );
 }
 
 export default App;
+
