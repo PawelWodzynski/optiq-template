@@ -11,13 +11,13 @@ const ApiTestButton = ({ onClick, isLoading }) => {
     >
       {isLoading ? (
         <>
-          <FaSpinner className={styles.spinner} /> {/* Use styles from CSS module */}
-          <span>Testowanie...</span>
+          <FaSpinner className={styles.spinner} /> {/* Use spinner style */}
+          <span className={styles.buttonText}>Testowanie...</span> {/* Apply text style */}
         </>
       ) : (
         <>
-          <FaLock />
-          <span>Testuj autoryzację API</span>
+          <FaLock className={styles.icon} /> {/* Apply icon style */}
+          <span className={styles.buttonText}>Testuj autoryzację API</span> {/* Apply text style */}
         </>
       )}
     </button>
