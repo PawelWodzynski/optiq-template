@@ -1,5 +1,5 @@
 import React from 'react';
-// import styles from './ReactIconsSection.module.css'; // Remove CSS module import
+import styles from './ReactIconsSection.module.css';
 import { FaReact, FaNodeJs, FaGithub, FaDocker, FaChevronUp, FaChevronDown } from 'react-icons/fa';
 import LibraryStatusIndicator from '../LibraryStatusIndicator';
 import { useReactIconsSectionLogic } from './ReactIconsSection';

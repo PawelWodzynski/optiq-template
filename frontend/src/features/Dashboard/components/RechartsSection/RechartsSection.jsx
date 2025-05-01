@@ -1,5 +1,5 @@
 import React from 'react';
-// import styles from './RechartsSection.module.css'; // Remove CSS module import
+import styles from './RechartsSection.module.css';
 import { FaChartLine, FaChevronUp, FaChevronDown } from 'react-icons/fa';
 import LibraryStatusIndicator from '../LibraryStatusIndicator';
 import StatusChart from './components/StatusChart';

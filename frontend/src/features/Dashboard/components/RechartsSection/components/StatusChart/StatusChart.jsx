@@ -1,6 +1,6 @@
 import React from 'react';
 import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer } from 'recharts';
-// import styles from './StatusChart.module.css'; // Remove CSS module import
+import styles from './StatusChart.module.css';
 import { useStatusChartLogic } from './StatusChart';
 
 const StatusChart = ({ data }) => {

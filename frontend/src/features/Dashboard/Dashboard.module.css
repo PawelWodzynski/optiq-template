@@ -1,0 +1,11 @@
+.dashboardContainer {
+  /* Styles for the main dashboard container */
+  /* Keep Tailwind classes for overall layout/theme */
+}
+
+.dashboardContent {
+  padding: 20px;
+  max-width: 1200px;
+  margin: 0 auto;
+}
+

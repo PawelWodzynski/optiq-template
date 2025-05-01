@@ -1,5 +1,5 @@
 import React from "react";
-// import styles from "./Dashboard.module.css"; // Remove incorrect CSS module import
+import styles from "./Dashboard.module.css";
 import { useDashboardLogic } from "./Dashboard";
 
 // Import Section Components

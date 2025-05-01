@@ -1,5 +1,5 @@
 import React from 'react';
-// import styles from './I18nextSection.module.css'; // Remove CSS module import
+import styles from './I18nextSection.module.css';
 import { FaLanguage, FaChevronUp, FaChevronDown } from 'react-icons/fa';
 import LibraryStatusIndicator from '../LibraryStatusIndicator';
 import LanguageSwitcher from './components/LanguageSwitcher';

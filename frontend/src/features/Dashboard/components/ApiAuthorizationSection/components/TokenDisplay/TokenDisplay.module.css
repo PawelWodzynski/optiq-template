@@ -1,0 +1,9 @@
+/* Styles specific to the TokenDisplay component */
+.tokenDisplay {
+  /* Add specific styles if needed */
+}
+
+.tokenText {
+  word-break: break-all; /* Ensure long tokens wrap */
+}
+

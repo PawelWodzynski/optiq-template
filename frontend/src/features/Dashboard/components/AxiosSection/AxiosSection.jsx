@@ -1,5 +1,5 @@
 import React from 'react';
-// import styles from './AxiosSection.module.css'; // Remove CSS module import
+import styles from './AxiosSection.module.css';
 import { SiAxios } from 'react-icons/si';
 import { FaChevronUp, FaChevronDown } from 'react-icons/fa';
 import LibraryStatusIndicator from '../LibraryStatusIndicator';

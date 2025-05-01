@@ -1,5 +1,5 @@
 import React from 'react';
-// import styles from './LibraryStatusIndicator.module.css'; // Remove CSS module import
+import styles from './LibraryStatusIndicator.module.css';
 import { FaCheckCircle, FaTimesCircle } from 'react-icons/fa';
 
 const LibraryStatusIndicator = ({ libraryName, status }) => {

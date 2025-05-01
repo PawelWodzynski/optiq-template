@@ -1,5 +1,5 @@
 import React from 'react';
-// import styles from './ApiAuthorizationSection.module.css'; // Remove CSS module import
+import styles from './ApiAuthorizationSection.module.css';
 import { FaKey, FaChevronUp, FaChevronDown } from 'react-icons/fa';
 import ApiTestButton from './components/ApiTestButton';
 import ApiStatusDisplay from './components/ApiStatusDisplay';

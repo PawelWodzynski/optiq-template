@@ -1,0 +1,16 @@
+.logoutButton {
+  /* Styles from original .logout-button */
+  padding: 8px 16px;
+  background-color: #dc3545;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 14px;
+  transition: background-color 0.3s;
+}
+
+.logoutButton:hover {
+  background-color: #c82333;
+}
+
