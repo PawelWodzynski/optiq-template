@@ -1,6 +1,6 @@
 import React from "react";
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
-import LoginPage from "./components/LoginPageComponents/LoginPage";
+import LoginPage from "./features/Login"; // Use index.js for feature export
 import Dashboard from "./features/Dashboard";
 import ProtectedRoute from "./ProtectedRoute/ProtectedRoute";
 import "./App.css";
