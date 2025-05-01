@@ -1,38 +1,53 @@
 /* Styles specific to the ApiStatusDisplay component */
 .statusContainer {
-  /* Tailwind handles p-4, rounded-lg */
-  /* Add specific padding or margins if needed */
+  padding: 1rem; /* p-4 */
+  border-radius: 0.375rem; /* rounded-md */
+  margin-top: 1rem; /* Add some space above */
 }
 
 .successBg {
-  /* Tailwind handles bg-green-900 (adjust as needed) */
-  background-color: rgba(16, 185, 129, 0.2); /* Example: Green with opacity */
-  border: 1px solid rgb(16, 185, 129);
+  background-color: rgba(16, 185, 129, 0.1); /* Lighter green background */
+  border: 1px solid rgba(16, 185, 129, 0.5); /* Softer green border */
+  color: #a7f3d0; /* Lighter green text for contrast */
 }
 
 .errorBg {
-  /* Tailwind handles bg-red-900 (adjust as needed) */
-  background-color: rgba(239, 68, 68, 0.2); /* Example: Red with opacity */
-  border: 1px solid rgb(239, 68, 68);
+  background-color: rgba(239, 68, 68, 0.1); /* Lighter red background */
+  border: 1px solid rgba(239, 68, 68, 0.5); /* Softer red border */
+  color: #fecaca; /* Lighter red text for contrast */
 }
 
 .statusHeader {
-  /* Tailwind handles flex, items-center, space-x-2, mb-2 */
+  display: flex;
+  align-items: center;
+  gap: 0.5rem; /* space-x-2 */
+  margin-bottom: 0.5rem; /* mb-2 */
+}
+
+.icon {
+  width: 1.25rem; /* w-5 */
+  height: 1.25rem; /* h-5 */
+  flex-shrink: 0; /* Prevent icon from shrinking */
 }
 
 .successIcon {
-  /* Tailwind handles text-green-400 */
+  composes: icon;
+  color: #34d399; /* green-400 */
 }
 
 .errorIcon {
-  /* Tailwind handles text-red-400 */
+  composes: icon;
+  color: #f87171; /* red-400 */
 }
 
 .statusText {
-  /* Tailwind handles font-bold */
+  font-weight: 600; /* font-semibold */
+  font-size: 1.125rem; /* text-lg */
 }
 
 .messageText {
-  /* Tailwind handles text-sm, text-gray-300 */
+  font-size: 0.875rem; /* text-sm */
+  color: inherit; /* Inherit color from container */
+  word-break: break-word; /* Wrap long messages */
 }
 
