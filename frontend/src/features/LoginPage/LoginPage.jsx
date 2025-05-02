@@ -1,20 +1,32 @@
-import React from "react";
-import styles from "./LoginPage.module.css"; // Import module CSS
-import LoginHeader from "./components/LoginHeader"; // Import LoginHeader
+import React, { useEffect } from "react";
+import { useNavigate } from "react-router-dom";
+import styles from "./LoginPage.module.css"; 
+import LoginHeader from "./components/LoginHeader"; 
 import LoginForm from "./components/LoginForm/LoginForm";
-import RegisterSection from "./components/Register/RegisterSection"; // Import RegisterSection
+import RegisterSection from "./components/Register/RegisterSection"; 
 
 const LoginPage = () => {
+  const navigate = useNavigate();
+  
+  // Sprawdź autentykację przy montowaniu komponentu
+  useEffect(() => {
+    const token = localStorage.getItem("token");
+    const isAuthenticated = token !== null;
+    
+    if (isAuthenticated) {
+      navigate("/dashboard");
+    }
+  }, [navigate]); // Dodaj navigate jako zależność useEffect
+
   return (
-    <div className={styles.loginPage}> {/* Use module CSS class */}
-      <div className={styles.loginContainer}> {/* Use module CSS class */}
-        <LoginHeader /> {/* Use LoginHeader component */}
+    <div className={styles.loginPage}>
+      <div className={styles.loginContainer}>
+        <LoginHeader />
         <LoginForm />
-        <RegisterSection /> {/* Add RegisterSection here */}
+        <RegisterSection />
       </div>
     </div>
   );
 };
 
 export default LoginPage;
-
