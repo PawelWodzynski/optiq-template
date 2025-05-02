@@ -1,5 +1,18 @@
-.login-page-grid {
+/* Renamed class to camelCase */
+.loginPageGrid {
   display: grid;
-  grid-template-rows: 5vh 95fr;
+  /* Adjusted rows: auto for navbar, main content takes remaining space, auto for register section */
+  grid-template-rows: auto 1fr auto;
   grid-template-columns: 100%;
+  min-height: 100vh; /* Ensure layout takes full viewport height */
+  box-sizing: border-box;
 }
+
+/* Style the third child (RegisterSection) to center its content */
+.loginPageGrid > *:nth-child(3) {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding-bottom: 2rem; /* Add some padding at the bottom */
+}
+

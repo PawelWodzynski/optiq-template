@@ -1,8 +1,7 @@
 import React from "react";
 import styles from "./LoginCard.module.css"; // Import CSS module
 import LoginForm from "./LoginForm/LoginForm";
-// Updated import path for RegisterSection
-import RegisterSection from "./components/RegisterSection"; 
+// Removed import for RegisterSection
 
 const LoginCard = () => {
   return (
@@ -11,8 +10,7 @@ const LoginCard = () => {
       {/* Row 1: Placeholder or Header if needed - Removed as LoginForm has header */}
       {/* Row 2: Login Form */}
       <LoginForm />
-      {/* Row 3: Register Section */}
-      <RegisterSection />
+      {/* Row 3: Register Section - Removed */}
     </div>
   );
 };
