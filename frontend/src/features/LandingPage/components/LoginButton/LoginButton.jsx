@@ -6,7 +6,17 @@ const LoginButton = () => {
   const navigate = useNavigate();
 
   const handleClick = () => {
+
+  const token = localStorage.getItem("token");
+  const isAuthenticated = token !== null;
+
+  // If user is already authenticated, redirect to dashboard
+  if (isAuthenticated) {
+    navigate("/dashboard")
+  }else{
     navigate("/login");
+  }
+
   };
 
   return (

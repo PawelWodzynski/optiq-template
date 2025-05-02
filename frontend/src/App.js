@@ -10,13 +10,13 @@ function App() {
   return (
     <Router>
       <Routes>
+        <Route path="/" element={<LandingPage />} /> 
         <Route path="/login" element={<LoginPage />} />
         <Route
           path="/dashboard"
           element={<ProtectedRoute element={<Dashboard />} />}
         />
         {/* Update root path to show LandingPage */}
-        <Route path="/" element={<LandingPage />} /> 
       </Routes>
     </Router>
   );

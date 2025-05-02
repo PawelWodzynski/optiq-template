@@ -76,7 +76,7 @@ public class WebSecurityConfig {
                         session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .authorizeHttpRequests(authorize ->
                         authorize
-                                .requestMatchers("/","/login", "/register").permitAll()
+                                .requestMatchers("/login", "/register").permitAll()
                                 .requestMatchers("/swagger-ui/**", "/v3/api-docs/**", "/swagger-resources/**").permitAll()
                                 .anyRequest().authenticated())
                 // Use the injected jwtAuthFilter bean
@@ -97,7 +97,7 @@ public class WebSecurityConfig {
     @Bean
     public WebSecurityCustomizer ignoringCustomizer() {
         return (web) -> web.ignoring()
-                .requestMatchers("/")
+//                .requestMatchers("/")
                 .requestMatchers("/login", "/register")
                 .requestMatchers("/swagger-ui.html")
                 .requestMatchers("/swagger-ui/**")

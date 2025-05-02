@@ -17,7 +17,7 @@ import java.util.Arrays;
 @Component
 public class JwtAuthFilter extends OncePerRequestFilter {
 
-    private static final String[] PERMITTED_PATHS = {"/","/login", "/register", "/swagger-ui", "/v3/api-docs", "/swagger-resources"};
+    private static final String[] PERMITTED_PATHS = {"/login", "/register", "/swagger-ui", "/v3/api-docs", "/swagger-resources"};
 
     private final UserAuthProvider userAuthProvider;
 
