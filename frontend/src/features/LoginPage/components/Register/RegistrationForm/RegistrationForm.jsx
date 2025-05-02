@@ -27,7 +27,7 @@ const RegistrationForm = ({ onSuccess }) => {
     setError(''); // Clear previous errors
     try {
       // Use environment variable for backend URL ideally
-      const response = await axios.post('http://localhost:8080/register', formData);
+      const response = await axios.post('/register', formData);
       const { token } = response.data; 
       localStorage.setItem('token', token); // Store token
       console.log('Registration successful, token stored.');

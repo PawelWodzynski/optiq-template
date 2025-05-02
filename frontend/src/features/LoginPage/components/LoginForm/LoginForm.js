@@ -1,7 +1,8 @@
 import React, { useState } from "react";
 import "./LoginForm.css";
-import axios from '../../utils/axios';
+import axios from '../../../../utils/axios';
 import { useNavigate } from "react-router-dom";
+import RegisterSection from "../Register/RegisterSection";
 
 const LoginForm = () => {
   const [login, setLogin] = useState("");
@@ -45,6 +46,7 @@ const LoginForm = () => {
   };
 
   return (
+    <>
     <form onSubmit={handleLogin} className="login-form">
       <h2>Logowanie</h2>
       {error && <div className="error-message">{error}</div>}
@@ -71,7 +73,10 @@ const LoginForm = () => {
       <button type="submit" className="login-button">
         Zaloguj się
       </button>
+    
     </form>
+     <RegisterSection/>
+    </>
   );
 };
 

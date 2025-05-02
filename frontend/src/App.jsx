@@ -1,7 +1,7 @@
 import React from "react";
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import LandingPage from "./features/LandingPage"; // Import the new Landing Page
-import LoginPage from "./features/Login"; // Re-add LoginPage import
+import LoginPage from "./features/LoginPage"; // Re-add LoginPage import
 import Dashboard from "./features/Dashboard";
 import ProtectedRoute from "./ProtectedRoute/ProtectedRoute";
 import "./App.css";
