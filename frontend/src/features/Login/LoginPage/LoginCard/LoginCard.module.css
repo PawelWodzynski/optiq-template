@@ -1,21 +1,32 @@
-.login-card {
-  height: 40vh;
+.loginCard {
+  height: auto; /* Let height adjust based on content */
+  min-height: 40vh; /* Maintain minimum height */
   width: 35%;
   border-radius: 0.75rem;
   border: 1px solid #374151;
   background-color: #1f2937;
   box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+  /* Apply grid layout directly here */
+  display: grid;
+  /* Adjusted rows: auto for header (if any), main form, auto for register section */
+  grid-template-rows: auto 1fr auto; 
+  grid-template-columns: 100%;
+  padding: 1rem; /* Add some padding */
+  box-sizing: border-box; /* Include padding in width/height */
 }
 
-.login-card-grid {
-  display: grid;
-  grid-template-rows: 15% 70% 15%;
-  grid-template-columns: 100%;
+/* Remove the separate grid class as it's merged into loginCard */
+
+/* Ensure grid items align properly */
+.loginCard > * {
+  width: 100%; /* Make sure children take full width */
 }
 
 @media (max-width: 800px) {
-  .login-card {
-    height: 40vh;
-    width: 100%;
+  .loginCard {
+    /* height: 40vh; */ /* Let height be auto */
+    width: 90%; /* Adjust width for smaller screens */
+    margin: 1rem; /* Add some margin */
   }
 }
+

@@ -5,7 +5,7 @@ import styles from "./LoginForm.module.css";
 import LoginButton from "./LoginButton/LoginButton";
 import LoginCardHeader from "../LoginCardHeader/LoginCardHeader";
 import LoginFields from "./LoginFields/LoginFields";
-import RegisterSection from "./components/RegisterSection"; // Import the new RegisterSection
+// Removed RegisterSection import
 
 const LoginForm = () => {
   const [login, setLogin] = useState("");
@@ -29,7 +29,6 @@ const LoginForm = () => {
   };
 
   return (
-    // Removed the outer React Fragment as it's no longer needed
     <form onSubmit={handleLogin} className={styles.loginFormGrid}>
       <LoginCardHeader />
       <LoginFields
@@ -40,10 +39,8 @@ const LoginForm = () => {
       />
       <div className={styles.buttonContainer}>
         <LoginButton />
-        {/* Use the new RegisterSection component */}
-        <RegisterSection />
+        {/* Removed RegisterSection component usage */}
       </div>
-      {/* Modal logic is now inside RegisterSection */}
     </form>
   );
 };
