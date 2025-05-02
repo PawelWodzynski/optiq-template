@@ -1,0 +1,8 @@
+/* Styles for the RegisterSection component */
+
+.registerSectionContainer {
+  /* Add any container-specific styles if needed */
+  /* For now, it might just act as a wrapper */
+  display: contents; /* Or flex, grid, etc., depending on desired layout */
+}
+

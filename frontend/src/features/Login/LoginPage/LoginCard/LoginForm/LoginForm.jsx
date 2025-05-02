@@ -5,14 +5,11 @@ import styles from "./LoginForm.module.css";
 import LoginButton from "./LoginButton/LoginButton";
 import LoginCardHeader from "../LoginCardHeader/LoginCardHeader";
 import LoginFields from "./LoginFields/LoginFields";
-import RegisterLink from "./components/RegisterLink"; // Import RegisterLink
-import RegistrationModal from "./components/RegistrationModal"; // Import RegistrationModal
-import RegistrationForm from "./components/RegistrationForm"; // Import RegistrationForm
+import RegisterSection from "./components/RegisterSection"; // Import the new RegisterSection
 
 const LoginForm = () => {
   const [login, setLogin] = useState("");
   const [password, setPassword] = useState("");
-  const [isModalOpen, setIsModalOpen] = useState(false); // State for modal visibility
   const navigate = useNavigate();
 
   const handleLogin = async (e) => {
@@ -31,39 +28,23 @@ const LoginForm = () => {
     }
   };
 
-  // Function to open the registration modal
-  const handleRegisterClick = () => {
-    setIsModalOpen(true);
-  };
-
-  // Function to close the registration modal
-  const handleCloseModal = () => {
-    setIsModalOpen(false);
-  };
-
   return (
-    <>
-      <form onSubmit={handleLogin} className={styles.loginFormGrid}>
-        <LoginCardHeader />
-        <LoginFields
-          login={login}
-          setLogin={setLogin}
-          password={password}
-          setPassword={setPassword}
-        />
-        <div className={styles.buttonContainer}>
-          <LoginButton />
-          {/* Use RegisterLink component */}
-          <RegisterLink onClick={handleRegisterClick} />
-        </div>
-      </form>
-
-      {/* Render RegistrationModal */}
-      <RegistrationModal isOpen={isModalOpen} onClose={handleCloseModal}>
-        {/* Render RegistrationForm inside the modal */}
-        <RegistrationForm onSuccess={handleCloseModal} />
-      </RegistrationModal>
-    </>
+    // Removed the outer React Fragment as it's no longer needed
+    <form onSubmit={handleLogin} className={styles.loginFormGrid}>
+      <LoginCardHeader />
+      <LoginFields
+        login={login}
+        setLogin={setLogin}
+        password={password}
+        setPassword={setPassword}
+      />
+      <div className={styles.buttonContainer}>
+        <LoginButton />
+        {/* Use the new RegisterSection component */}
+        <RegisterSection />
+      </div>
+      {/* Modal logic is now inside RegisterSection */}
+    </form>
   );
 };
 
