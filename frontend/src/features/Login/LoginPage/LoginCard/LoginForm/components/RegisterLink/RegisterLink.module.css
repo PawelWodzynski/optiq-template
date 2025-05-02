@@ -1,18 +1,20 @@
 /* Styles for the RegisterLink component */
 
 .registerLink {
-  background: none;
-  border: none;
-  color: #4f46e5; /* indigo-600 */
-  text-decoration: underline;
+  background: yellow; /* DEBUG: Make background yellow */
+  border: 1px solid red; /* DEBUG: Add red border */
+  color: black; /* DEBUG: Change text color */
+  text-decoration: none; /* DEBUG: Remove underline */
   cursor: pointer;
-  padding: 0;
-  font-size: 0.875rem; /* text-sm */
-  margin-top: 0.5rem; /* Add some space above the link */
-  text-align: center; /* Center the link */
+  padding: 0.5rem 1rem; /* DEBUG: Add padding */
+  font-size: 1rem; /* DEBUG: Increase font size */
+  margin-top: 1rem; /* DEBUG: Increase margin */
+  text-align: center; 
+  display: inline-block; /* Ensure it behaves like a block for padding/border */
 }
 
 .registerLink:hover {
-  color: #3730a3; /* indigo-800 */
+  color: black; /* DEBUG: Keep text color black on hover */
+  background-color: lightyellow; /* DEBUG: Change background on hover */
 }
 
