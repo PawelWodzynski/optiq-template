@@ -1,12 +1,20 @@
 import React from "react";
-import styles from "./LoginPage.module.css"; // Import CSS module
+import { Navigate } from "react-router-dom"; // Import Navigate for redirection
+import styles from "./LoginPage.module.css";
 import LoginPageLayout from "./LoginPageLayout/LoginPageLayout";
 
 const LoginPage = () => {
-  // Apply a root class if LoginPage.module.css defines one, e.g., styles.loginPageContainer
-  // Assuming LoginPage.module.css might have a container style
+  const token = localStorage.getItem("token");
+  const isAuthenticated = token !== null;
+
+  // If user is already authenticated, redirect to dashboard
+  if (isAuthenticated) {
+    return <Navigate to="/dashboard" replace />;
+  }
+
+  // If not authenticated, render the login page layout
   return (
-    <div className={styles.loginPageContainer || ''}> {/* Example usage */}
+    <div className={styles.loginPageContainer || ''}>
       <LoginPageLayout />
     </div>
   );
