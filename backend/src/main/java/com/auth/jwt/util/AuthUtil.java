@@ -1,6 +1,7 @@
 package com.auth.jwt.util;
 
 import com.auth.jwt.data.entity.auth.employee.Employee;
+import com.auth.jwt.exception.UserNotAuthenticatedException; // Import custom exception
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Component;
@@ -21,6 +22,20 @@ public class AuthUtil {
         // Log or handle cases where authentication is null or principal is not Employee
         System.err.println("AuthUtil: Could not retrieve Employee from Security Context. Authentication: " + authentication);
         return null;
+    }
+
+    /**
+     * Gets the current authenticated user or throws an exception if not authenticated.
+     * This method simplifies authentication checks in controllers.
+     * @return The authenticated Employee object.
+     * @throws UserNotAuthenticatedException if the user is not authenticated or cannot be retrieved.
+     */
+    public Employee getAuthenticatedUserOrThrow() throws UserNotAuthenticatedException {
+        Employee employee = getCurrentUser();
+        if (employee == null) {
+            throw new UserNotAuthenticatedException("Użytkownik nie jest uwierzytelniony lub nie można go pobrać z kontekstu bezpieczeństwa.");
+        }
+        return employee;
     }
 }
 

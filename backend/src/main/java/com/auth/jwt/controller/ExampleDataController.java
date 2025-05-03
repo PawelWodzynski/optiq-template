@@ -2,6 +2,7 @@ package com.auth.jwt.controller;
 
 import com.auth.jwt.data.entity.app_data.ExampleData;
 import com.auth.jwt.data.entity.auth.employee.Employee;
+import com.auth.jwt.exception.UserNotAuthenticatedException; // Import custom exception
 import com.auth.jwt.service.ExampleDataService;
 import com.auth.jwt.util.AuthUtil;
 import com.auth.jwt.util.ResponseUtil;
@@ -32,36 +33,36 @@ public class ExampleDataController {
 
     /**
      * Test API authorization and fetch all example data.
-     * This controller method now delegates logic to helper utils and services.
+     * Uses AuthUtil.getAuthenticatedUserOrThrow() for concise authentication check.
      * @param token JWT token (optional, authentication is primarily handled by filter)
      * @return Success with example data or Unauthorized/Error response.
      */
     @GetMapping("/test")
     public ResponseEntity<?> testApiAuthorization(@RequestParam(required = false) String token) {
         try {
-        // 1. Get current user using AuthUtil
-        Employee employee = authUtil.getCurrentUser();
-        if (employee == null) {
-            // 2. Create error response using ResponseUtil
-            return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
-                    .body(responseUtil.createErrorResponse("Autoryzacja api nie działa - użytkownik nie uwierzytelniony"));
-        }
+            // 1. Get authenticated user or throw exception if not authenticated
+            Employee employee = authUtil.getAuthenticatedUserOrThrow();
 
-            // 3. Fetch data using ExampleDataService
+            // 2. Fetch data using ExampleDataService (only if authenticated)
             List<ExampleData> exampleDataList = exampleDataService.getAllExampleData();
 
-            // 4. Create success response using ResponseUtil
+            // 3. Create success response using ResponseUtil
             return ResponseEntity.ok(responseUtil.createSuccessResponse(
                     "Autoryzacja api działa dla użytkownika: " + employee.getUserName(),
                     exampleDataList
             ));
+
+        } catch (UserNotAuthenticatedException e) {
+            // 4. Handle specific authentication exception
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
+                    .body(responseUtil.createErrorResponse(e.getMessage())); // Use exception message
         } catch (Exception e) {
-            // 5. Handle potential exceptions from the service layer and create error response
-            // Consider more specific exception handling based on service layer exceptions
+            // 5. Handle potential exceptions from the service layer or other unexpected errors
+            // Log the exception for debugging purposes
+            System.err.println("Error in testApiAuthorization: " + e.getMessage());
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
-                    .body(responseUtil.createErrorResponse("Błąd podczas pobierania danych: " + e.getMessage()));
+                    .body(responseUtil.createErrorResponse("Wystąpił wewnętrzny błąd serwera podczas przetwarzania żądania."));
         }
     }
-
 }
 
