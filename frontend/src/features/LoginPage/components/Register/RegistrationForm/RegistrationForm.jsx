@@ -1,13 +1,12 @@
 import React, { useState } from 'react';
 import styles from './RegistrationForm.module.css';
-import axios from 'axios'; // Assuming axios is configured
 import { useNavigate } from 'react-router-dom';
 
 const RegistrationForm = ({ onSuccess }) => {
   const [formData, setFormData] = useState({
     userName: '',
     password: '',
-    confirmPassword: '', // Added confirm password state
+    confirmPassword: '',
     firstName: '',
     lastName: '',
     email: '',
@@ -34,28 +33,62 @@ const RegistrationForm = ({ onSuccess }) => {
     }
 
     try {
-      // Prepare data for backend (exclude confirmPassword if backend doesn't need it, but current DTO expects it)
+      // Prepare data for backend
       const dataToSend = {
         userName: formData.userName,
         password: formData.password,
-        confirmPassword: formData.confirmPassword, // Send confirmPassword as DTO expects it
+        confirmPassword: formData.confirmPassword,
         firstName: formData.firstName,
         lastName: formData.lastName,
         email: formData.email,
       };
 
-      const response = await axios.post('/register', dataToSend);
-      const { token } = response.data;
-      localStorage.setItem('token', token); // Store token
-      console.log('Registration successful, token stored.');
-      // Redirect to dashboard after successful registration
+      // Użyj fetch zamiast axios, z pełnym URL
+      const response = await fetch('http://localhost:8080/register', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'Accept': 'application/json'
+        },
+        body: JSON.stringify(dataToSend)
+      });
+
+      // Sprawdź status odpowiedzi
+      if (!response.ok) {
+        // Spróbuj odczytać szczegóły błędu jeśli serwer je zwrócił
+        const errorData = await response.json().catch(() => null);
+        throw new Error(
+          errorData?.message || 
+          `Rejestracja nie powiodła się (status: ${response.status})`
+        );
+      }
+
+      // Przekształć odpowiedź na JSON
+      const data = await response.json();
+      console.log('Registration response:', data);
+
+      // Zapisz token w localStorage
+      const { token } = data;
+      if (token) {
+        localStorage.setItem('token', token);
+        console.log('Registration successful, token stored.');
+      }
+
+      // Przekieruj do panelu po udanej rejestracji
       navigate('/dashboard');
       if (onSuccess) {
-        onSuccess(); // Close modal if onSuccess callback is provided
+        onSuccess(); // Zamknij modal jeśli przekazano callbacka onSuccess
       }
     } catch (err) {
       console.error('Registration failed:', err);
-      setError(err.response?.data?.message || 'Registration failed. Please try again.');
+      
+      if (err.name === 'TypeError' && err.message.includes('NetworkError')) {
+        setError('Błąd sieci. Sprawdź połączenie internetowe.');
+      } else if (err.name === 'SyntaxError') {
+        setError('Otrzymano nieprawidłową odpowiedź z serwera.');
+      } else {
+        setError(err.message || 'Rejestracja nie powiodła się. Spróbuj ponownie.');
+      }
     }
   };
 
@@ -84,7 +117,6 @@ const RegistrationForm = ({ onSuccess }) => {
           required
         />
       </div>
-      {/* Added Confirm Password Field */}
       <div className={styles.formGroup}>
         <label htmlFor="confirmPassword">Confirm Password</label>
         <input
@@ -135,4 +167,3 @@ const RegistrationForm = ({ onSuccess }) => {
 };
 
 export default RegistrationForm;
-
