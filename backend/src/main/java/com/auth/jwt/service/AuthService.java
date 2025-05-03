@@ -14,9 +14,12 @@ import org.springframework.security.core.Authentication; // Import Authenticatio
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import java.util.Collections; // Import Collections
 import java.util.HashMap; // Import HashMap
+import java.util.List; // Import List
 import java.util.Map; // Import Map
 import java.util.Optional; // Import Optional
+import java.util.stream.Collectors; // Import Collectors
 
 @Service
 @RequiredArgsConstructor // Lombok annotation for constructor injection
@@ -82,33 +85,34 @@ public class AuthService {
     }
 
     /**
-     * Validates a JWT token and retrieves the user's role.
+     * Validates a JWT token and retrieves the user's roles.
      * @param token The JWT token string.
-     * @return A Map containing token validity (boolean) and role (String or null).
+     * @return A Map containing token validity (boolean) and roles (List<String> or empty list).
      */
-    public Map<String, Object> validateTokenAndGetRole(String token) {
+    public Map<String, Object> validateTokenAndGetRoles(String token) { // Renamed method for clarity
         Map<String, Object> result = new HashMap<>();
         try {
             Authentication auth = userAuthProvider.validateToken(token);
-            // Token is valid, now get the user and role
+            // Token is valid, now get the user and roles
             if (auth.getPrincipal() instanceof Employee) {
                 Employee employee = (Employee) auth.getPrincipal();
                 result.put("tokenValidity", true);
-                // Check roles - return the first role name if exists, otherwise null
-                String roleName = Optional.ofNullable(employee.getRoles())
-                                        .flatMap(roles -> roles.stream().findFirst())
-                                        .map(Role::getName)
-                                        .orElse(null);
-                result.put("role", roleName);
+                // Get all role names, return empty list if none
+                List<String> roleNames = Optional.ofNullable(employee.getRoles())
+                                               .orElse(Collections.emptyList()) // Use empty list if roles collection is null
+                                               .stream()
+                                               .map(Role::getName)
+                                               .collect(Collectors.toList());
+                result.put("roles", roleNames); // Changed key to "roles"
             } else {
                 // Principal is not an Employee instance (should not happen with current setup)
                 result.put("tokenValidity", false);
-                result.put("role", null);
+                result.put("roles", Collections.emptyList()); // Return empty list
             }
         } catch (Exception e) {
             // Token validation failed (e.g., expired, invalid signature)
             result.put("tokenValidity", false);
-            result.put("role", null);
+            result.put("roles", Collections.emptyList()); // Return empty list
         }
         return result;
     }

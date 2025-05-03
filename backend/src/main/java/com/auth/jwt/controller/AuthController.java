@@ -12,6 +12,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*; // Import GetMapping
 
+import java.util.Collections; // Import Collections
 import java.util.Map;
 
 @RestController
@@ -61,23 +62,23 @@ public class AuthController {
     }
 
     /**
-     * Endpoint to validate a JWT token and return its validity status and the user's role.
+     * Endpoint to validate a JWT token and return its validity status and the user's roles.
      * Expects the token to be passed as a RequestParam.
      * @param token The JWT token to validate.
-     * @return ResponseEntity containing a map with tokenValidity (boolean) and role (String or null).
+     * @return ResponseEntity containing a map with tokenValidity (boolean) and roles (List<String>).
      */
     @GetMapping("/validate-token") // Using GET and RequestParam for simplicity
     public ResponseEntity<Map<String, Object>> validateToken(@RequestParam String token) {
         try {
-            // Delegate validation and role retrieval to AuthService
-            Map<String, Object> validationResult = authService.validateTokenAndGetRole(token);
+            // Delegate validation and role retrieval to AuthService (using the updated method)
+            Map<String, Object> validationResult = authService.validateTokenAndGetRoles(token);
             return ResponseEntity.ok(validationResult);
         } catch (Exception e) {
             // Handle unexpected errors during token validation
             log.error("Token validation error: ", e);
             // Return a generic error response, indicating validation failed implicitly
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
-                    .body(Map.of("tokenValidity", false, "role", null, "error", "Wystąpił błąd podczas walidacji tokenu."));
+                    .body(Map.of("tokenValidity", false, "roles", Collections.emptyList(), "error", "Wystąpił błąd podczas walidacji tokenu.")); // Ensure roles key exists even on error
         }
     }
 
