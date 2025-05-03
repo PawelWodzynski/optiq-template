@@ -1,6 +1,5 @@
 import React, { useState } from "react";
 import styles from "./LoginForm.module.css";
-import axios from '../../../../utils/axios';
 import { useNavigate } from "react-router-dom";
 
 // Import subcomponents
@@ -21,26 +20,50 @@ const LoginForm = () => {
     setError("");
 
     try {
-      const response = await axios.post("/login", {
-        login,
-        password,
-      }, {
+      // Użyj fetch zamiast axios, z pełnym URL
+      const response = await fetch("http://localhost:8080/login", {
+        method: 'POST',
         headers: {
-          'Content-Type': 'application/json'
-        }
+          'Content-Type': 'application/json',
+          'Accept': 'application/json'
+        },
+        body: JSON.stringify({
+          login,
+          password
+        })
       });
-      
-      const { token } = response.data;
+
+      // Sprawdź status odpowiedzi
+      if (!response.ok) {
+        // Spróbuj odczytać szczegóły błędu jeśli serwer je zwrócił
+        const errorData = await response.json().catch(() => null);
+        throw new Error(
+          errorData?.message || 
+          `Błąd logowania (status: ${response.status})`
+        );
+      }
+
+      // Przekształć odpowiedź na JSON
+      const data = await response.json();
+      console.log("Login response:", data);
+
+      // Zapisz token w localStorage
+      const { token } = data;
+      if (!token) {
+        throw new Error("Otrzymano nieprawidłową odpowiedź - brak tokenu");
+      }
+
       localStorage.setItem("token", token);
       navigate("/dashboard");
     } catch (error) {
       console.error("Error logging in:", error);
-      if (error.response) {
-        setError(error.response.data.message || "Nieprawidłowy login lub hasło");
-      } else if (error.request) {
-        setError("Brak odpowiedzi z serwera. Sprawdź połączenie sieciowe.");
+      
+      if (error.name === 'TypeError' && error.message.includes('NetworkError')) {
+        setError("Błąd sieci. Sprawdź połączenie internetowe.");
+      } else if (error.name === 'SyntaxError') {
+        setError("Otrzymano nieprawidłową odpowiedź z serwera.");
       } else {
-        setError("Wystąpił nieznany błąd podczas logowania");
+        setError(error.message || "Nieprawidłowy login lub hasło");
       }
     }
   };
@@ -50,12 +73,12 @@ const LoginForm = () => {
       <FormHeader title="Logowanie" />
       <ErrorMessage message={error} />
       <UsernameField 
-        value={login} 
-        onChange={(e) => setLogin(e.target.value)} 
+        value={login}
+        onChange={(e) => setLogin(e.target.value)}
       />
       <PasswordField 
-        value={password} 
-        onChange={(e) => setPassword(e.target.value)} 
+        value={password}
+        onChange={(e) => setPassword(e.target.value)}
       />
       <LoginButton type="submit">
         Zaloguj się
@@ -65,4 +88,3 @@ const LoginForm = () => {
 };
 
 export default LoginForm;
-

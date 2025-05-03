@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import axios from "../../utils/axios"; // Ensure this path is correct
+import axios from "axios"; // Ensure this path is correct
 import { useTranslation } from 'react-i18next';
 import { LineChart } from 'recharts'; // Import only what's needed for checks
 import { FaReact } from 'react-icons/fa'; // Import only what's needed for checks
@@ -74,41 +74,58 @@ export const useDashboardLogic = () => {
   }, [t]); // Add t to dependency array as it's used in the effect
 
   // --- API Call Logic ---
-  const testApiAuthorization = async () => {
-    setApiAuthStatus({ loading: true, success: null, message: '', error: null, data: null });
-    try {
-      const token = localStorage.getItem('token');
-      if (!token) {
-        throw new Error('Token nie został znaleziony w localStorage');
-      }
-      // Use the correct endpoint and pass token as query param
-      const response = await axios.get(`/example/test?token=${token}`); 
-      setApiAuthStatus({
-        loading: false,
-        success: true,
-        message: response.data?.message || 'Autoryzacja API działa poprawnie',
-        error: null,
-        data: response.data?.data || null
-      });
-    } catch (error) {
-      console.error('Błąd API:', error);
-      setApiAuthStatus({
-        loading: false,
-        success: false,
-        message: '',
-        error: error.response?.data?.message || error.message || 'Wystąpił błąd podczas autoryzacji API',
-        data: null
-      });
+const testApiAuthorization = async () => {
+  setApiAuthStatus({ loading: true, success: null, message: '', error: null, data: null });
+  
+  try {
+    const token = localStorage.getItem('token');
+    if (!token) {
+      throw new Error('Token nie został znaleziony w localStorage');
     }
-  };
-
-  // --- Return values --- 
-  return {
-    libraryStatus,
-    apiAuthStatus,
-    chartData,
-    testApiAuthorization,
-    // No need to return individual expand states, handled within sections
-  };
+    
+    // Użyj fetch zamiast axios z pełnym URL
+    const encodedToken = encodeURIComponent(token);
+    const response = await fetch(`http://localhost:8080/example/test?token=${encodedToken}`, {
+      method: 'GET',
+      headers: {
+        'Accept': 'application/json'
+      }
+    });
+    
+    // Sprawdź status odpowiedzi
+    if (!response.ok) {
+      throw new Error(`Serwer zwrócił status: ${response.status}`);
+    }
+    
+    // Przekształć odpowiedź na JSON
+    const data = await response.json();
+    
+    setApiAuthStatus({
+      loading: false,
+      success: true,
+      message: data?.message || 'Autoryzacja API działa poprawnie',
+      error: null,
+      data: data?.data || null
+    });
+  } catch (error) {
+    console.error('Błąd API:', error);
+    
+    setApiAuthStatus({
+      loading: false,
+      success: false,
+      message: '',
+      error: error.message || 'Wystąpił błąd podczas autoryzacji API',
+      data: null
+    });
+  }
 };
 
+// --- Return values ---
+return {
+  libraryStatus,
+  apiAuthStatus,
+  chartData,
+  testApiAuthorization,
+  // No need to return individual expand states, handled within sections
+};
+}

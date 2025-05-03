@@ -72,6 +72,7 @@ public class AuthController {
         try {
             // Delegate validation and role retrieval to AuthService (using the updated method)
             Map<String, Object> validationResult = authService.validateTokenAndGetRoles(token);
+            log.info("Token validation result: " + validationResult.toString());
             return ResponseEntity.ok(validationResult);
         } catch (Exception e) {
             // Handle unexpected errors during token validation

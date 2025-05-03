@@ -1,9 +1,8 @@
 import React, { useState, useEffect } from "react";
 import { Navigate } from "react-router-dom";
-import axios from "axios"; // Assuming axios is configured with baseURL or proxy
 
 const ProtectedRoute = ({ element }) => {
-  const [isAuthenticated, setIsAuthenticated] = useState(null); // Use null to indicate loading/undetermined state
+  const [isAuthenticated, setIsAuthenticated] = useState(null);
   const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
@@ -20,38 +19,57 @@ const ProtectedRoute = ({ element }) => {
 
       try {
         console.log(`ProtectedRoute - Validating token: ${token}`);
-        // Send token as a query parameter and explicitly request JSON
-        const response = await axios.get(`/validate-token?token=${encodeURIComponent(token)}`, {
+        
+        // Użyj fetch API z pełnym URL - podobnie jak w curl
+        const encodedToken = encodeURIComponent(token);
+        const response = await fetch(`http://localhost:8080/validate-token?token=${encodedToken}`, {
+          method: 'GET',
           headers: {
             'Accept': 'application/json'
           }
         });
-        console.log("ProtectedRoute - Validation response:", response.data);
+        
+        // Sprawdź status odpowiedzi
+        if (!response.ok) {
+          throw new Error(`Server responded with status: ${response.status}`);
+        }
+        
+        // Przekształć odpowiedź na JSON
+        const data = await response.json();
+        console.log("ProtectedRoute - Validation response:", data);
 
-        // Check if the response data is an object and has the tokenValidity property
-        if (typeof response.data === 'object' && response.data !== null && response.data.tokenValidity === true) {
-          console.log("ProtectedRoute - Token is valid, setting authenticated.");
+        // Sprawdź wynik walidacji
+        if (data && data.tokenValidity === true) {
+          console.log("ProtectedRoute - Token is valid, setting authenticated. Roles:", data.roles);
+          
+          // Zapisz role użytkownika do localStorage, jeśli są dostępne
+          if (data.roles && Array.isArray(data.roles)) {
+            localStorage.setItem("userRoles", JSON.stringify(data.roles));
+          }
+          
           setIsAuthenticated(true);
         } else {
-          console.log("ProtectedRoute - Token is invalid or validation failed (unexpected response format?), setting unauthenticated.");
-          localStorage.removeItem("token"); // Remove invalid token
+          console.log("ProtectedRoute - Token is invalid, setting unauthenticated.");
+          localStorage.removeItem("token");
+          localStorage.removeItem("userRoles");
           setIsAuthenticated(false);
         }
       } catch (error) {
         console.error("ProtectedRoute - Error validating token:", error);
-        localStorage.removeItem("token"); // Remove token on error
+        localStorage.removeItem("token");
+        localStorage.removeItem("userRoles");
         setIsAuthenticated(false);
       }
+      
       setIsLoading(false);
     };
 
     validateToken();
-  }, []); // Empty dependency array ensures this runs only once on mount
+  }, []);
 
   if (isLoading) {
-    // Optional: Render a loading indicator while validating
     console.log("ProtectedRoute - Loading...");
-    return <div>Loading...</div>; // Or a spinner component
+    return <div>Loading...</div>;
   }
 
   if (isAuthenticated === false) {
@@ -64,10 +82,8 @@ const ProtectedRoute = ({ element }) => {
     return element;
   }
 
-  // Fallback case (should ideally not be reached if logic is correct)
   console.log("ProtectedRoute - Fallback, redirecting to login.");
   return <Navigate to="/login-page" replace />;
 };
 
 export default ProtectedRoute;
-

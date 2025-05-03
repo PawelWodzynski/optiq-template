@@ -1,12 +1,12 @@
 import axios from 'axios';
 
 // Konfiguracja bazowego URL
-axios.defaults.baseURL = process.env.NODE_ENV === 'production' 
+const baseURL = process.env.NODE_ENV === 'production' 
   ? '/'  // w produkcji (kontener) używaj relatywnego URL
   : 'http://localhost:8080';  // w developmencie lokalnym
 
-// W tym przypadku nie dodajemy tokena automatycznie
-// Token będzie dodawany jako parametr URL w każdym żądaniu
+// Konfiguracja domyślnych ustawień globalnie
+axios.defaults.baseURL = baseURL;
 
 // Interceptory do logowania
 axios.interceptors.request.use(
@@ -36,4 +36,5 @@ axios.interceptors.response.use(
   }
 );
 
+// Eksportuj domyślną instancję axios (która teraz jest skonfigurowana)
 export default axios;
