@@ -20,15 +20,20 @@ const ProtectedRoute = ({ element }) => {
 
       try {
         console.log(`ProtectedRoute - Validating token: ${token}`);
-        // Send token as a query parameter
-        const response = await axios.get(`/validate-token?token=${encodeURIComponent(token)}`);
+        // Send token as a query parameter and explicitly request JSON
+        const response = await axios.get(`/validate-token?token=${encodeURIComponent(token)}`, {
+          headers: {
+            'Accept': 'application/json'
+          }
+        });
         console.log("ProtectedRoute - Validation response:", response.data);
 
-        if (response.data && response.data.tokenValidity === true) {
+        // Check if the response data is an object and has the tokenValidity property
+        if (typeof response.data === 'object' && response.data !== null && response.data.tokenValidity === true) {
           console.log("ProtectedRoute - Token is valid, setting authenticated.");
           setIsAuthenticated(true);
         } else {
-          console.log("ProtectedRoute - Token is invalid or validation failed, setting unauthenticated.");
+          console.log("ProtectedRoute - Token is invalid or validation failed (unexpected response format?), setting unauthenticated.");
           localStorage.removeItem("token"); // Remove invalid token
           setIsAuthenticated(false);
         }
