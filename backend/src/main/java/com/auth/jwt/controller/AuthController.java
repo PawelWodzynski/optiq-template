@@ -10,9 +10,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*; // Import GetMapping
 
 import java.util.Map;
 
@@ -29,7 +27,7 @@ public class AuthController {
         try {
             // Delegate login logic to AuthService
             String token = authService.login(credentialsDto);
-            // Use ResponseUtil for success response (assuming token should be in a map)
+            // Return token in a map
             return ResponseEntity.ok(Map.of("token", token));
         } catch (AuthenticationException e) {
             // Handle specific authentication errors from the service
@@ -48,7 +46,7 @@ public class AuthController {
         try {
             // Delegate registration logic to AuthService
             String token = authService.register(registerEmployeeDto);
-            // Use ResponseUtil for success response (assuming token should be in a map)
+            // Return token in a map
             return ResponseEntity.ok(Map.of("token", token));
         } catch (RegistrationException e) {
             // Handle specific registration errors from the service (e.g., validation, user exists)
@@ -59,6 +57,27 @@ public class AuthController {
             log.error("Registration error: ", e);
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
                     .body(responseUtil.createErrorResponse("Wystąpił wewnętrzny błąd serwera podczas rejestracji."));
+        }
+    }
+
+    /**
+     * Endpoint to validate a JWT token and return its validity status and the user's role.
+     * Expects the token to be passed as a RequestParam.
+     * @param token The JWT token to validate.
+     * @return ResponseEntity containing a map with tokenValidity (boolean) and role (String or null).
+     */
+    @GetMapping("/validate-token") // Using GET and RequestParam for simplicity
+    public ResponseEntity<Map<String, Object>> validateToken(@RequestParam String token) {
+        try {
+            // Delegate validation and role retrieval to AuthService
+            Map<String, Object> validationResult = authService.validateTokenAndGetRole(token);
+            return ResponseEntity.ok(validationResult);
+        } catch (Exception e) {
+            // Handle unexpected errors during token validation
+            log.error("Token validation error: ", e);
+            // Return a generic error response, indicating validation failed implicitly
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .body(Map.of("tokenValidity", false, "role", null, "error", "Wystąpił błąd podczas walidacji tokenu."));
         }
     }
 

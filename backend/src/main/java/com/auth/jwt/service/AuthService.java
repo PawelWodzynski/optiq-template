@@ -3,14 +3,20 @@ package com.auth.jwt.service;
 import com.auth.jwt.data.dto.authorization.CredentialsDto;
 import com.auth.jwt.data.dto.employee.RegisterEmployeeDto;
 import com.auth.jwt.data.entity.auth.employee.Employee;
+import com.auth.jwt.data.entity.auth.employee.Role; // Import Role entity
 import com.auth.jwt.data.repository.auth.employee.EmployeeJpaRepository;
-import com.auth.jwt.exception.RegistrationException; // Assuming a custom exception for registration errors
-import com.auth.jwt.exception.AuthenticationException; // Assuming a custom exception for login errors
+import com.auth.jwt.exception.RegistrationException;
+import com.auth.jwt.exception.AuthenticationException;
 import com.auth.jwt.security.UserAuthProvider;
 import com.auth.jwt.util.ValidationUtil;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.core.Authentication; // Import Authentication
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+
+import java.util.HashMap; // Import HashMap
+import java.util.Map; // Import Map
+import java.util.Optional; // Import Optional
 
 @Service
 @RequiredArgsConstructor // Lombok annotation for constructor injection
@@ -28,11 +34,6 @@ public class AuthService {
      * @throws AuthenticationException if authentication fails (user not found, wrong password).
      */
     public String login(CredentialsDto credentialsDto) throws AuthenticationException {
-        // Implementation Note: This method will contain the logic currently in AuthController's login method.
-        // It will find the user, match the password, and generate a token.
-        // If user not found or password mismatch, it throws AuthenticationException.
-        
-        // Placeholder for outline:
         Employee employee = employeeRepository.findByLogin(credentialsDto.getLogin());
         if (employee == null || !passwordEncoder.matches(String.valueOf(credentialsDto.getPassword()), employee.getPassword())) {
             throw new AuthenticationException("Nieprawidłowy login lub hasło");
@@ -47,13 +48,9 @@ public class AuthService {
      * @throws RegistrationException if registration fails (validation errors, user/email exists).
      */
     public String register(RegisterEmployeeDto registerEmployeeDto) throws RegistrationException {
-        // Implementation Note: This method will contain the logic currently in AuthController's register method.
-        // It will perform validation, check for existing user/email, save the new user, and generate a token.
-        // Throws RegistrationException for specific errors.
-
         // 1. Validate Password
         if (!validationUtil.isPasswordValid(registerEmployeeDto.getPassword())) {
-            throw new RegistrationException("Hasło musi spełniać określone warunki złożoności."); // More specific message can be added
+            throw new RegistrationException("Hasło musi spełniać określone warunki złożoności.");
         }
 
         // 2. Validate Email
@@ -71,7 +68,7 @@ public class AuthService {
             throw new RegistrationException("Podany adres email jest już zarejestrowany.");
         }
 
-        // 5. Create and save new user (Actual saving logic)
+        // 5. Create and save new user
         Employee newEmployee = new Employee();
         newEmployee.setUserName(registerEmployeeDto.getUserName());
         newEmployee.setPassword(passwordEncoder.encode(registerEmployeeDto.getPassword()));
@@ -82,6 +79,38 @@ public class AuthService {
 
         // 6. Generate token
         return userAuthProvider.createToken(newEmployee.getUserName());
+    }
+
+    /**
+     * Validates a JWT token and retrieves the user's role.
+     * @param token The JWT token string.
+     * @return A Map containing token validity (boolean) and role (String or null).
+     */
+    public Map<String, Object> validateTokenAndGetRole(String token) {
+        Map<String, Object> result = new HashMap<>();
+        try {
+            Authentication auth = userAuthProvider.validateToken(token);
+            // Token is valid, now get the user and role
+            if (auth.getPrincipal() instanceof Employee) {
+                Employee employee = (Employee) auth.getPrincipal();
+                result.put("tokenValidity", true);
+                // Check roles - return the first role name if exists, otherwise null
+                String roleName = Optional.ofNullable(employee.getRoles())
+                                        .flatMap(roles -> roles.stream().findFirst())
+                                        .map(Role::getName)
+                                        .orElse(null);
+                result.put("role", roleName);
+            } else {
+                // Principal is not an Employee instance (should not happen with current setup)
+                result.put("tokenValidity", false);
+                result.put("role", null);
+            }
+        } catch (Exception e) {
+            // Token validation failed (e.g., expired, invalid signature)
+            result.put("tokenValidity", false);
+            result.put("role", null);
+        }
+        return result;
     }
 }
 
