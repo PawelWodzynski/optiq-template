@@ -38,6 +38,7 @@ public class ExampleDataController {
      */
     @GetMapping("/test")
     public ResponseEntity<?> testApiAuthorization(@RequestParam(required = false) String token) {
+        try {
         // 1. Get current user using AuthUtil
         Employee employee = authUtil.getCurrentUser();
         if (employee == null) {
@@ -46,7 +47,6 @@ public class ExampleDataController {
                     .body(responseUtil.createErrorResponse("Autoryzacja api nie działa - użytkownik nie uwierzytelniony"));
         }
 
-        try {
             // 3. Fetch data using ExampleDataService
             List<ExampleData> exampleDataList = exampleDataService.getAllExampleData();
 

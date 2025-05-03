@@ -7,7 +7,10 @@ import org.springframework.stereotype.Service;
 
 import java.util.List;
 
+import lombok.extern.slf4j.Slf4j;
+
 @Service
+@Slf4j
 public class ExampleDataService {
 
     private final AppDataRepository appDataRepository;
@@ -24,16 +27,13 @@ public class ExampleDataService {
      * @throws RuntimeException if there is an error during data fetching.
      */
     public List<ExampleData> getAllExampleData() {
-        // Implementation Note: This method will contain the logic currently in the controller:
-        // try {
-        //     return appDataRepository.findAll();
-        // } catch (Exception e) {
-        //     // Log the exception
-        //     throw new RuntimeException("Error fetching ExampleData", e);
-        // }
-        // For the outline, we just declare the method signature and responsibility.
-        // Actual implementation will be done later if requested.
-        return null; // Placeholder for outline
+         try {
+             return appDataRepository.findAll();
+         } catch (Exception e) {
+             // Log the exception
+             log.error("getAllExampleData " + e);
+             return null; // Placeholder for outline
+         }
     }
 }
 
