@@ -59,7 +59,7 @@ public class ExampleDataController {
         } catch (Exception e) {
             // 5. Handle potential exceptions from the service layer or other unexpected errors
             // Log the exception for debugging purposes
-            System.err.println("Error in testApiAuthorization: " + e.getMessage());
+            System.err.println("Error in apiMethodName: " + e.getMessage());
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
                     .body(responseUtil.createErrorResponse("Wystąpił wewnętrzny błąd serwera podczas przetwarzania żądania."));
         }
