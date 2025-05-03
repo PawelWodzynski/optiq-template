@@ -103,16 +103,16 @@ public class AuthService {
                                                .stream()
                                                .map(Role::getName)
                                                .collect(Collectors.toList());
-                result.put("roles", roleNames); // Changed key to "roles"
+                result.put("roles", roleNames); // Ensure the key is "roles"
             } else {
                 // Principal is not an Employee instance (should not happen with current setup)
                 result.put("tokenValidity", false);
-                result.put("roles", Collections.emptyList()); // Return empty list
+                result.put("roles", Collections.emptyList()); // Ensure the key is "roles"
             }
         } catch (Exception e) {
             // Token validation failed (e.g., expired, invalid signature)
             result.put("tokenValidity", false);
-            result.put("roles", Collections.emptyList()); // Return empty list
+            result.put("roles", Collections.emptyList()); // Ensure the key is "roles"
         }
         return result;
     }
