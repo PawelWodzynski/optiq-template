@@ -63,7 +63,5 @@ public class ExampleDataController {
         }
     }
 
-    // Note: Original private helper methods (getCurrentUser, createErrorResponse, createSuccessResponse)
-    // have been removed as their logic is now in AuthUtil and ResponseUtil.
 }
 

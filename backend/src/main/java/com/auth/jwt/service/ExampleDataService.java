@@ -1,7 +1,7 @@
 package com.auth.jwt.service;
 
 import com.auth.jwt.data.entity.app_data.ExampleData;
-import com.auth.jwt.data.repository.app_data.AppDataRepository;
+import com.auth.jwt.data.repository.app_data.ExampleDataRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -13,11 +13,11 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 public class ExampleDataService {
 
-    private final AppDataRepository appDataRepository;
+    private final ExampleDataRepository exampleDataRepository;
 
     @Autowired
-    public ExampleDataService(AppDataRepository appDataRepository) {
-        this.appDataRepository = appDataRepository;
+    public ExampleDataService(ExampleDataRepository exampleDataRepository) {
+        this.exampleDataRepository = exampleDataRepository;
     }
 
     /**
@@ -28,7 +28,7 @@ public class ExampleDataService {
      */
     public List<ExampleData> getAllExampleData() {
          try {
-             return appDataRepository.findAll();
+             return exampleDataRepository.findAll();
          } catch (Exception e) {
              // Log the exception
              log.error("getAllExampleData " + e);
