@@ -20,7 +20,8 @@ Ten dokument opisuje zasady tworzenia żądań HTTP z aplikacji frontendowej Rea
 const response = await fetch("http://localhost:8080/validate-token?token=...", {
   method: "GET",
   headers: {
-    // ... inne nagłówki
+    "Accept": "application/json" // Ważne, aby oczekiwać JSON
+    // ... inne nagłówki, np. Authorization
   }
 });
 ```
@@ -51,7 +52,6 @@ if (token) {
     if (!response.ok) {
       // Obsługa błędów HTTP (np. 401, 403, 404, 500)
       console.error("API request failed with status:", response.status);
-      // Można rzucić błąd lub zwrócić odpowiedni stan
       throw new Error(`HTTP error! status: ${response.status}`);
     }
 
@@ -74,10 +74,81 @@ if (token) {
 - Używaj bloków `try...catch` do obsługi błędów sieciowych lub błędów podczas przetwarzania odpowiedzi.
 - Przetwarzaj odpowiedź JSON za pomocą `response.json()`.
 
-## 5. Przykład Implementacji
+## 5. Szczegółowy Przykład Implementacji (`ProtectedRoute.js`)
 
-Przykład użycia `fetch` do walidacji tokenu można znaleźć w komponencie `ProtectedRoute.js`.
+Poniższy fragment kodu z `ProtectedRoute.js` pokazuje, jak używać `fetch` do walidacji tokenu JWT pobranego z `localStorage` poprzez wysłanie żądania GET do endpointu `/validate-token` na `localhost:8080`:
+
+```javascript
+// ... wewnątrz komponentu React lub funkcji async
+
+const validateToken = async () => {
+  const token = localStorage.getItem("token");
+  console.log("ProtectedRoute - Token from localStorage:", token);
+
+  if (!token) {
+    console.log("ProtectedRoute - No token found, setting unauthenticated.");
+    // ... obsługa braku tokenu
+    return;
+  }
+
+  try {
+    console.log(`ProtectedRoute - Validating token: ${token}`);
+    
+    // Zakoduj token przed dodaniem go do URL
+    const encodedToken = encodeURIComponent(token);
+    
+    // Wyślij żądanie GET do backendu z tokenem jako parametr query
+    const response = await fetch(`http://localhost:8080/validate-token?token=${encodedToken}`, {
+      method: 'GET',
+      headers: {
+        // Ważne: Określ, że oczekujesz odpowiedzi w formacie JSON
+        'Accept': 'application/json'
+      }
+    });
+    
+    // Sprawdź, czy odpowiedź serwera jest poprawna (status 2xx)
+    if (!response.ok) {
+      // Rzuć błąd, jeśli status odpowiedzi wskazuje na problem (np. 401, 404, 500)
+      throw new Error(`Server responded with status: ${response.status}`);
+    }
+    
+    // Przekształć ciało odpowiedzi na obiekt JSON
+    const data = await response.json();
+    console.log("ProtectedRoute - Validation response:", data);
+
+    // Sprawdź, czy token jest ważny na podstawie odpowiedzi z backendu
+    if (data && data.tokenValidity === true) {
+      console.log("ProtectedRoute - Token is valid, setting authenticated. Roles:", data.roles);
+      // ... ustaw stan uwierzytelnienia na true, zapisz role
+    } else {
+      console.log("ProtectedRoute - Token is invalid, setting unauthenticated.");
+      // ... ustaw stan uwierzytelnienia na false, usuń token/role
+    }
+  } catch (error) {
+    // Obsłuż błędy sieciowe lub błędy podczas przetwarzania odpowiedzi
+    console.error("ProtectedRoute - Error validating token:", error);
+    // ... ustaw stan uwierzytelnienia na false, usuń token/role
+  }
+  
+  // ... zakończ stan ładowania
+};
+
+// Wywołaj funkcję walidacji (np. w useEffect)
+validateToken();
+
+```
+
+**Kluczowe punkty w przykładzie:**
+- Pobranie tokenu z `localStorage`.
+- Użycie `encodeURIComponent` dla tokenu w URL.
+- Wywołanie `fetch` z metodą `GET` i pełnym adresem `http://localhost:8080/validate-token`.
+- Ustawienie nagłówka `Accept: 'application/json'`.
+- Sprawdzenie `response.ok` do obsługi błędów HTTP.
+- Przetworzenie odpowiedzi za pomocą `response.json()`.
+- Obsługa błędów za pomocą `try...catch`.
+- Logika warunkowa oparta na polu `tokenValidity` z odpowiedzi.
 
 ## 6. Tworzenie Nowych Endpointów Backendowych
 
 Jeśli zachodzi potrzeba stworzenia nowego endpointu po stronie backendu, zapoznaj się z zasadami opisanymi w pliku `/java-architecture-rules/endpoint_rules.md` (jeśli istnieje).
+
