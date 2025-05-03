@@ -2,148 +2,66 @@ package com.auth.jwt.controller;
 
 import com.auth.jwt.data.dto.authorization.CredentialsDto;
 import com.auth.jwt.data.dto.employee.RegisterEmployeeDto;
-import com.auth.jwt.data.entity.auth.employee.Employee;
-import com.auth.jwt.data.repository.auth.employee.EmployeeJpaRepository;
-import com.auth.jwt.security.UserAuthProvider;
+import com.auth.jwt.exception.AuthenticationException;
+import com.auth.jwt.exception.RegistrationException;
+import com.auth.jwt.service.AuthService;
+import com.auth.jwt.util.ResponseUtil; // Import ResponseUtil
+import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
-import java.util.HashMap;
 import java.util.Map;
-
-import lombok.extern.slf4j.Slf4j;
 
 @RestController
 @Slf4j
+@RequiredArgsConstructor // Use Lombok for constructor injection
 public class AuthController {
 
-    private final EmployeeJpaRepository employeeRepository;
-    private final PasswordEncoder passwordEncoder;
-    private final UserAuthProvider userAuthProvider;
-
-    public AuthController(EmployeeJpaRepository employeeRepository, 
-                         PasswordEncoder passwordEncoder,
-                         UserAuthProvider userAuthProvider) {
-        this.employeeRepository = employeeRepository;
-        this.passwordEncoder = passwordEncoder;
-        this.userAuthProvider = userAuthProvider;
-    }
+    private final AuthService authService;
+    private final ResponseUtil responseUtil; // Inject ResponseUtil
 
     @PostMapping("/login")
-    public ResponseEntity<Map<String, String>> login(@RequestBody CredentialsDto credentialsDto) {
-        Employee employee = employeeRepository.findByLogin(credentialsDto.getLogin());
-        if (employee == null) {
-            return ResponseEntity.status(401).body(Map.of("message", "Invalid username or password"));
+    public ResponseEntity<?> login(@RequestBody CredentialsDto credentialsDto) {
+        try {
+            // Delegate login logic to AuthService
+            String token = authService.login(credentialsDto);
+            // Use ResponseUtil for success response (assuming token should be in a map)
+            return ResponseEntity.ok(Map.of("token", token));
+        } catch (AuthenticationException e) {
+            // Handle specific authentication errors from the service
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
+                    .body(responseUtil.createErrorResponse(e.getMessage()));
+        } catch (Exception e) {
+            // Handle unexpected errors during login
+            log.error("Login error: ", e);
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .body(responseUtil.createErrorResponse("Wystąpił wewnętrzny błąd serwera podczas logowania."));
         }
-        if (passwordEncoder.matches(String.valueOf(credentialsDto.getPassword()), employee.getPassword())) {
-            String token = userAuthProvider.createToken(employee.getUserName());
-            Map<String, String> response = new HashMap<>();
-            response.put("token", token);
-            return ResponseEntity.ok(response);
-        }
-        return ResponseEntity.status(401).body(Map.of("message", "Invalid username or password"));
     }
-
 
     @PostMapping("/register")
-    public ResponseEntity<Map<String, String>> register(@RequestBody RegisterEmployeeDto registerEmployee) {
+    public ResponseEntity<?> register(@RequestBody RegisterEmployeeDto registerEmployeeDto) {
         try {
-            // Walidacja hasła
-            String password = registerEmployee.getPassword();
-            if (!isPasswordValid(password)) {
-                return ResponseEntity.badRequest().body(Map.of("message",
-                        "Hasło musi spełniać następujące warunki: " +
-                                "zawierać minimum 6 znaków, " +
-                                "przynajmniej jedną dużą literę, " +
-                                "przynajmniej jeden znak specjalny (np. !@#$%^&*())"
-                ));
-            }
-
-            // Walidacja adresu email
-            String email = registerEmployee.getEmail();
-            if (!isEmailValid(email)) {
-                return ResponseEntity.badRequest().body(Map.of("message",
-                        "Podany adres email jest nieprawidłowy. " +
-                                "Adres email musi zawierać znak @ oraz prawidłową domenę."
-                ));
-            }
-
-            // Sprawdzenie, czy użytkownik już istnieje
-            Employee employee = employeeRepository.findByLogin(registerEmployee.getUserName());
-            if (employee != null) {
-                return ResponseEntity.badRequest().body(Map.of("message", "User already exists"));
-            }
-
-            // Sprawdzenie, czy email już istnieje
-            employee = employeeRepository.findByEmail(registerEmployee.getEmail());
-            if (employee != null) {
-                return ResponseEntity.badRequest().body(Map.of("message", "Email already exists"));
-            }
-
-            // Tworzenie nowego użytkownika
-            employee = new Employee();
-            employee.setUserName(registerEmployee.getUserName());
-            employee.setPassword(passwordEncoder.encode(registerEmployee.getPassword()));
-            employee.setFirstName(registerEmployee.getFirstName());
-            employee.setLastName(registerEmployee.getLastName());
-            employee.setEmail(registerEmployee.getEmail());
-            employeeRepository.save(employee);
-
-            // Generowanie tokenu
-            String token = userAuthProvider.createToken(employee.getUserName());
-            Map<String, String> response = new HashMap<>();
-            response.put("token", token);
-            return ResponseEntity.ok(response);
+            // Delegate registration logic to AuthService
+            String token = authService.register(registerEmployeeDto);
+            // Use ResponseUtil for success response (assuming token should be in a map)
+            return ResponseEntity.ok(Map.of("token", token));
+        } catch (RegistrationException e) {
+            // Handle specific registration errors from the service (e.g., validation, user exists)
+            return ResponseEntity.badRequest()
+                    .body(responseUtil.createErrorResponse(e.getMessage()));
         } catch (Exception e) {
-            log.error("register " + e);
-            return ResponseEntity.badRequest().body(Map.of("message", "An error occurred"));
+            // Handle unexpected errors during registration
+            log.error("Registration error: ", e);
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .body(responseUtil.createErrorResponse("Wystąpił wewnętrzny błąd serwera podczas rejestracji."));
         }
     }
 
-    /**
-     * Walidacja hasła - sprawdza czy hasło ma minimum 6 znaków,
-     * zawiera przynajmniej jedną dużą literę i jeden znak specjalny
-     */
-    private boolean isPasswordValid(String password) {
-        if (password == null || password.length() < 6) {
-            return false;
-        }
-
-        boolean hasUpperCase = false;
-        boolean hasSpecialChar = false;
-        String specialChars = "!@#$%^&*()_+-=[]{}|;':\",./<>?";
-
-        for (char c : password.toCharArray()) {
-            if (Character.isUpperCase(c)) {
-                hasUpperCase = true;
-            } else if (specialChars.indexOf(c) >= 0) {
-                hasSpecialChar = true;
-            }
-
-            if (hasUpperCase && hasSpecialChar) {
-                return true;
-            }
-        }
-
-        return false;
-    }
-
-    /**
-     * Walidacja adresu email przy użyciu wyrażenia regularnego
-     */
-    private boolean isEmailValid(String email) {
-        if (email == null || email.isEmpty()) {
-            return false;
-        }
-
-        // Podstawowe wyrażenie regularne do walidacji adresu email
-        String emailRegex = "^[a-zA-Z0-9_+&*-]+(?:\\.[a-zA-Z0-9_+&*-]+)*@(?:[a-zA-Z0-9-]+\\.)+[a-zA-Z]{2,7}$";
-
-        return email.matches(emailRegex);
-    }
-
-
+    // Removed isPasswordValid and isEmailValid methods as they are now in ValidationUtil
 }
+
