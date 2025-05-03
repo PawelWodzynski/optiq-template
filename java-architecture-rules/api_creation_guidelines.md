@@ -9,8 +9,8 @@ Rozwój nowego endpointu API powinien przebiegać w następującej kolejności:
 1.  **Struktura Bazy Danych**: Zaprojektuj lub zaktualizuj strukturę tabel i kolumn potrzebnych dla nowej funkcjonalności w odpowiednim skrypcie SQL.
 2.  **Encje (Entities)**: Stwórz lub zaktualizuj klasy encji JPA (@Entity), które mapują się na tabele bazy danych.
 3.  **Repozytoria (Repositories)**: Stwórz interfejsy repozytoriów (rozszerzające JpaRepository lub inne), aby zapewnić dostęp do danych dla nowo utworzonych encji.
-4.  **Serwisy (Services)**: Zaimplementuj logikę biznesową w klasach serwisowych (@Service). Serwisy orkiestrują operacje, wykorzystując repozytoria do interakcji z bazą danych. Złożoną logikę w serwisach należy rozbijać na mniejsze, prywatne metody lub dedykowane klasy pomocnicze (utility).
-5.  **Klasy Pomocnicze (Utilities)**: Jeśli logika wymaga reużywalnych funkcji pomocniczych (np. walidacja, transformacja danych), wydziel je do osobnych klas w pakiecie `util`.
+4.  **Serwisy (Services)**: Zaimplementuj logikę biznesową w klasach serwisowych (@Service). Serwisy orkiestrują operacje, wykorzystując repozytoria do interakcji z bazą danych.
+5.  **Klasy Pomocnicze (Utilities)**: Jeśli logika w serwisie staje się złożona lub wymaga reużywalnych funkcji (np. walidacja, transformacja danych, skomplikowane obliczenia), **zdecydowanie preferuj wydzielanie jej do osobnych klas pomocniczych** (np. w pakiecie `util` lub dedykowanym podpakiecie serwisu) zamiast tworzenia wielu metod prywatnych w klasie serwisowej. Wstrzykuj te klasy pomocnicze do serwisu.
 6.  **Kontroler (Controller)**: Na końcu stwórz metodę w odpowiednim kontrolerze (@RestController), która będzie obsługiwać żądanie HTTP. Metoda ta powinna być jak najprostsza, delegując całą logikę do serwisu i używając standardowego szablonu obsługi odpowiedzi.
 
 ## 2. Projektowanie Bazy Danych
@@ -86,5 +86,5 @@ public ResponseEntity<?> nazwaMetodyApi(
 
 - **Serwisy**: Główna logika biznesowa, operacje na danych.
 - **Klasy Pomocnicze (Utils)**: Wydzielaj reużywalne fragmenty kodu (np. skomplikowane obliczenia, transformacje danych, walidacje niezwiązane bezpośrednio z encją) do dedykowanych klas w pakiecie `util`. Wstrzykuj te utility do serwisów lub innych komponentów, gdzie są potrzebne.
-- **Metody Prywatne w Serwisach**: Długie lub złożone metody w serwisach dziel na mniejsze, prywatne metody w obrębie tej samej klasy, aby poprawić czytelność.
+- **Rozbijanie Logiki w Serwisach**: Zamiast tworzyć wiele prywatnych metod w obrębie tej samej klasy serwisowej, **preferuj wydzielanie złożonej lub reużywalnej logiki do dedykowanych klas pomocniczych** (np. w pakiecie `util` lub w dedykowanym podpakiecie serwisu). Wstrzykuj te klasy pomocnicze do serwisu. Utrzymuj metody w serwisach możliwie zwięzłe i skoncentrowane na orkiestracji.
 
