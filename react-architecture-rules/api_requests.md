@@ -21,17 +21,17 @@ const response = await fetch("http://localhost:8080/validate-token?token=...", {
   method: "GET",
   headers: {
     "Accept": "application/json" // Ważne, aby oczekiwać JSON
-    // ... inne nagłówki, np. Authorization
   }
 });
 ```
 
 ## 3. Autoryzacja (Token JWT)
 
-Dla endpointów wymagających uwierzytelnienia, **token JWT musi być dołączony** do żądania w nagłówku `Authorization`.
+Dla endpointów wymagających uwierzytelnienia, **token JWT musi być dołączony do żądania wyłącznie jako parametr zapytania (query parameter) w adresie URL.**
 
+- **Nagłówek `Authorization`**: **Nie używamy** nagłówka `Authorization` ani formatu `Bearer` do przesyłania tokenu.
 - Token jest przechowywany w `localStorage` po pomyślnym zalogowaniu lub rejestracji.
-- Należy pobrać token z `localStorage` i dodać go do nagłówka w formacie `Bearer <token>`.
+- Należy pobrać token z `localStorage`, zakodować go za pomocą `encodeURIComponent`, a następnie dodać do adresu URL jako parametr `token`, np. `?token=<zakodowany_token>`.
 
 **Przykład (wewnątrz funkcji `async`):**
 ```javascript
@@ -39,11 +39,17 @@ const token = localStorage.getItem("token");
 
 if (token) {
   try {
-    const response = await fetch("http://localhost:8080/some-protected-endpoint", {
+    // Zakoduj token przed dodaniem go do URL
+    const encodedToken = encodeURIComponent(token);
+    
+    // Dodaj zakodowany token jako parametr zapytania 'token' do URL
+    const url = `http://localhost:8080/some-protected-endpoint?token=${encodedToken}`;
+
+    const response = await fetch(url, {
       method: "GET", // lub POST, PUT, DELETE
       headers: {
-        "Authorization": `Bearer ${token}`,
-        "Content-Type": "application/json", // Jeśli wysyłasz JSON
+        // Nie dodajemy nagłówka Authorization
+        "Content-Type": "application/json", // Jeśli wysyłasz JSON w ciele żądania (np. POST/PUT)
         "Accept": "application/json" // Dobra praktyka, aby oczekiwać JSON
       },
       // body: JSON.stringify(data) // Dla metod POST/PUT
@@ -76,7 +82,7 @@ if (token) {
 
 ## 5. Szczegółowy Przykład Implementacji (`ProtectedRoute.js`)
 
-Poniższy fragment kodu z `ProtectedRoute.js` pokazuje, jak używać `fetch` do walidacji tokenu JWT pobranego z `localStorage` poprzez wysłanie żądania GET do endpointu `/validate-token` na `localhost:8080`:
+Poniższy fragment kodu z `ProtectedRoute.js` pokazuje, jak używać `fetch` do walidacji tokenu JWT pobranego z `localStorage` poprzez wysłanie żądania GET do endpointu `/validate-token` na `localhost:8080`, **przesyłając token jako parametr zapytania**:
 
 ```javascript
 // ... wewnątrz komponentu React lub funkcji async
@@ -103,6 +109,7 @@ const validateToken = async () => {
       headers: {
         // Ważne: Określ, że oczekujesz odpowiedzi w formacie JSON
         'Accept': 'application/json'
+        // Nie dodajemy nagłówka Authorization
       }
     });
     
@@ -141,7 +148,8 @@ validateToken();
 **Kluczowe punkty w przykładzie:**
 - Pobranie tokenu z `localStorage`.
 - Użycie `encodeURIComponent` dla tokenu w URL.
-- Wywołanie `fetch` z metodą `GET` i pełnym adresem `http://localhost:8080/validate-token`.
+- Wywołanie `fetch` z metodą `GET` i pełnym adresem `http://localhost:8080/validate-token`, **z tokenem w parametrze zapytania `?token=`**.
+- **Brak nagłówka `Authorization`**.
 - Ustawienie nagłówka `Accept: 'application/json'`.
 - Sprawdzenie `response.ok` do obsługi błędów HTTP.
 - Przetworzenie odpowiedzi za pomocą `response.json()`.
