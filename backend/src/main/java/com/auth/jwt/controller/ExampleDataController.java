@@ -38,7 +38,7 @@ public class ExampleDataController {
      * @return Success with example data or Unauthorized/Error response.
      */
     @GetMapping("/test")
-    public ResponseEntity<?> testApiAuthorization(@RequestParam(required = false) String token) {
+    public ResponseEntity<?> testApiAuthorization(@RequestParam(required = true) String token) {
         try {
             // 1. Get authenticated user or throw exception if not authenticated
             Employee employee = authUtil.getAuthenticatedUserOrThrow();
