@@ -32,10 +32,11 @@ public ResponseEntity<?> nazwaMetodyApi(
         /* inne parametry @RequestParam, @PathVariable lub @RequestBody */
 ) {
     try {
-        // 1. Uwierzytelnienie (jeśli wymagane przez endpoint)
+        // 1. Uwierzytelnienie (Standardowo wymagane - pomijane tylko w wyjątkowych przypadkach)
         // Pobierz uwierzytelnionego użytkownika lub rzuć wyjątek, jeśli nie jest zalogowany.
+        // W 99% przypadków ten krok jest obowiązkowy.
         Employee employee = authUtil.getAuthenticatedUserOrThrow(); 
-        // Jeśli endpoint nie wymaga autoryzacji, pomiń ten krok.
+        // Pominięcie tego kroku jest wyjątkiem od reguły i wymaga uzasadnienia.
 
         // 2. Wywołanie logiki biznesowej w serwisie
         // Przekaż potrzebne parametry do metody serwisowej.
@@ -70,7 +71,7 @@ public ResponseEntity<?> nazwaMetodyApi(
 
 **Kluczowe elementy szablonu:**
 - Użycie bloku `try-catch` do obsługi wyjątków.
-- Opcjonalne wywołanie `authUtil.getAuthenticatedUserOrThrow()` na początku bloku `try` dla zabezpieczonych endpointów.
+- **Standardowe wywołanie `authUtil.getAuthenticatedUserOrThrow()`** na początku bloku `try` dla zabezpieczonych endpointów (pomijane tylko w wyjątkowych, uzasadnionych przypadkach).
 - Delegowanie logiki biznesowej do metod w klasach serwisowych.
 - Użycie `responseUtil.createSuccessResponse()` do tworzenia odpowiedzi 200 OK.
 - Dedykowane bloki `catch` dla `UserNotAuthenticatedException` (zwraca 401) oraz innych specyficznych wyjątków biznesowych (zwracają odpowiednie statusy błędów, np. 400, 404).
