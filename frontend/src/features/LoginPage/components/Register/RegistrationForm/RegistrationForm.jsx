@@ -7,6 +7,7 @@ const RegistrationForm = ({ onSuccess }) => {
   const [formData, setFormData] = useState({
     userName: '',
     password: '',
+    confirmPassword: '', // Added confirm password state
     firstName: '',
     lastName: '',
     email: '',
@@ -25,14 +26,30 @@ const RegistrationForm = ({ onSuccess }) => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     setError(''); // Clear previous errors
+
+    // Frontend validation: Check if passwords match
+    if (formData.password !== formData.confirmPassword) {
+      setError('Hasła nie są identyczne.');
+      return; // Stop submission if passwords don't match
+    }
+
     try {
-      // Use environment variable for backend URL ideally
-      const response = await axios.post('/register', formData);
-      const { token } = response.data; 
+      // Prepare data for backend (exclude confirmPassword if backend doesn't need it, but current DTO expects it)
+      const dataToSend = {
+        userName: formData.userName,
+        password: formData.password,
+        confirmPassword: formData.confirmPassword, // Send confirmPassword as DTO expects it
+        firstName: formData.firstName,
+        lastName: formData.lastName,
+        email: formData.email,
+      };
+
+      const response = await axios.post('/register', dataToSend);
+      const { token } = response.data;
       localStorage.setItem('token', token); // Store token
       console.log('Registration successful, token stored.');
       // Redirect to dashboard after successful registration
-      navigate('/dashboard'); 
+      navigate('/dashboard');
       if (onSuccess) {
         onSuccess(); // Close modal if onSuccess callback is provided
       }
@@ -63,6 +80,18 @@ const RegistrationForm = ({ onSuccess }) => {
           id="password"
           name="password"
           value={formData.password}
+          onChange={handleChange}
+          required
+        />
+      </div>
+      {/* Added Confirm Password Field */}
+      <div className={styles.formGroup}>
+        <label htmlFor="confirmPassword">Confirm Password</label>
+        <input
+          type="password"
+          id="confirmPassword"
+          name="confirmPassword"
+          value={formData.confirmPassword}
           onChange={handleChange}
           required
         />
